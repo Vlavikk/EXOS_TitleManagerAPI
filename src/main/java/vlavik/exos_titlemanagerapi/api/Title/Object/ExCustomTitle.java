@@ -4,28 +4,53 @@ import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import vlavik.exos_titlemanagerapi.api.Title.TitleEditable;
 
-import java.util.Collection;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.List;
 
 public class ExCustomTitle {
     private final TitleEditable.Type type;
     private final Object text;
     private int time;
-    private final boolean isAnimation;
     private final boolean isForced;
     private final IgnoredType ignoreOtherType;
+    @forAnimation
+    private final boolean isAnimation;
+    @forAnimation
+    private final int delayAnimation;
+    @forAnimation
+    private final List<Object> animationFrame;
     public ExCustomTitle(TitleEditable.Type type, Object text, int time, boolean forced, IgnoredType ignoredType){
         this.type = type;
         if (text instanceof String || text instanceof Component ||text instanceof List){
             this.text = text;
         }
         else{
-            throw new IllegalArgumentException("Текстом для "+type.toString()+" может быть String/Component/List<>");
+            throw new IllegalArgumentException("Текстом для "+type.toString()+" может быть только String/Component/List<>");
         }
         ignoreOtherType = ignoredType;
         isForced = forced;
-        isAnimation = text instanceof List;
+        isAnimation = false;
         this.time = time;
+        this.delayAnimation = 0;
+        this.animationFrame = null;
+    }
+    //Для анимаций
+    public ExCustomTitle(TitleEditable.Type type, List<Object> list, int time, boolean forced, int delay, IgnoredType ignoredType){
+        this.type = type;
+        this.text = null;
+        for (Object object : list){
+            if (object instanceof String || object instanceof Component) continue;
+            else throw new IllegalArgumentException("Листом для "+type.toString()+" может быть /List<String/Component>");
+        }
+        this.animationFrame = list;
+        ignoreOtherType = ignoredType;
+        isForced = forced;
+        this.isAnimation = true;
+        this.time = time;
+        this.delayAnimation = delay;
     }
     public enum IgnoredType {
         NONE,
@@ -59,5 +84,19 @@ public class ExCustomTitle {
 
     public IgnoredType getIgnoreOtherType() {
         return ignoreOtherType;
+    }
+
+    public int getDelayAnimation() {
+        return delayAnimation;
+    }
+
+    public List<Object> getAnimationFrame() {
+        return animationFrame;
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    public @interface forAnimation{
+        String message() default "Invalid name";
     }
 }

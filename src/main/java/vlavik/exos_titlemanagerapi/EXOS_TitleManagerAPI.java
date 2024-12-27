@@ -1,15 +1,17 @@
 package vlavik.exos_titlemanagerapi;
 
 import com.github.retrooper.packetevents.PacketEvents;
-import io.github.retrooper.packetevents.bstats.bukkit.Metrics;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import vlavik.exos_titlemanagerapi.Comand.Comand;
-import vlavik.exos_titlemanagerapi.api.Title.Object.TitleTask;
+import vlavik.exos_titlemanagerapi.api.Title.Object.ExCustomTitle;
 import vlavik.exos_titlemanagerapi.api.Title.TitleEditable;
 import vlavik.exos_titlemanagerapi.api.TitlePlayer;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public final class EXOS_TitleManagerAPI extends JavaPlugin{
@@ -24,16 +26,19 @@ public final class EXOS_TitleManagerAPI extends JavaPlugin{
 
         for (Player player : Bukkit.getOnlinePlayers()){
             TitlePlayer player1 = new TitlePlayer(player);
-            player1.send(TitleEditable.Type.ACTIONBAR,"gegege",50);
-            player1.send(TitleEditable.Type.TITLE,"dddddddd",30);
-            player1.send(TitleEditable.Type.BOSS_BAR,"яяяDWAD",20,false);
-//            Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-//                @Override
-//                public void run() {
-//
-            player1.send(TitleEditable.Type.TITLE,"яяяяя",22);
-//                }
-//            },2);
+           player1.send(TitleEditable.Type.BOSS_BAR,"1",20, ExCustomTitle.IgnoredType.SAVE);
+            player1.sendAnimation(TitleEditable.Type.TITLE,new ArrayList<>(Arrays.asList(
+                    "1",
+                    "2",
+                    "3"))
+            ,80,10);
+            player1.send(TitleEditable.Type.ACTIONBAR,"1",41, ExCustomTitle.IgnoredType.SAVE);
+            player1.send(TitleEditable.Type.ACTIONBAR,"11",41, ExCustomTitle.IgnoredType.SAVE);
+            player1.removeQueue(TitleEditable.Type.TITLE,1);
+            player1.send(TitleEditable.Type.ACTIONBAR,"2",50);
+            player1.send(TitleEditable.Type.ACTIONBAR,"3",71);
+
+            player1.send(TitleEditable.Type.TITLE,"2",22);
         }
     }
 
@@ -42,7 +47,6 @@ public final class EXOS_TitleManagerAPI extends JavaPlugin{
         for (TitlePlayer player : TitlePlayer.titlePlayers.values()){
             player.cancel(true, TitleEditable.Type.TITLE, TitleEditable.Type.ACTIONBAR, TitleEditable.Type.BOSS_BAR);
         }
-        // Plugin shutdown logic
     }
 
     public static EXOS_TitleManagerAPI getInstance() {

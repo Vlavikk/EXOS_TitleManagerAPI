@@ -1,6 +1,7 @@
 package vlavik.exos_titlemanagerapi.api.Title;
 
 import net.kyori.adventure.text.Component;
+import vlavik.exos_titlemanagerapi.api.Title.Object.ExCustomTitle;
 
 import java.util.List;
 
@@ -23,13 +24,13 @@ public interface TitleEditable {
      *                         продолжит отмененные задачи на том же времени
      *
      */
-    public <T> void send(Type type,T text, int time,boolean... ignoredOtherType);
+    public <T> void send(Type type, T text, int time, ExCustomTitle.IgnoredType... ignoredOtherType);
 
     /**
      * Принудительно отправляет игроку, игнорируя очередь. После, очередь продолжит с того же момента, что и остановилась
      * @param text Параметры можно посмотреть в комментарии к <b>{@link #send}
      */
-    public <T> void forcedSend(Type type,T text, int time,boolean... ignoredOtherType);
+    public <T> void forcedSend(Type type,T text, int time,ExCustomTitle.IgnoredType... ignoredOtherType);
 
     /**
      * Добавляет в очередь
@@ -37,10 +38,10 @@ public interface TitleEditable {
      * @param text Параметры можно посмотреть в комментарии к <b>{@link #send}</b>
      *             <p>
      */
-    public <T> void addQueue(Type type,T text,int time, int numberInQueue,boolean... ignoredOtherType);
+    public <T> void addQueue(Type type,T text,int time, int numberInQueue,ExCustomTitle.IgnoredType... ignoredOtherType);
 
     /**
-     * Очевидно
+     * Очевидно, индексы начинаются с 0
      */
     public void removeQueue(Type type,int numberInQueue);
 
@@ -62,13 +63,13 @@ public interface TitleEditable {
      *                       <p>
      * @param delay Задержка между кадрами
      */
-    public <T> void sendAnimation(Type type, List<T> animationFrame,int time,int delay,boolean... ignoredOtherType);
+    public void sendAnimation(Type type, List<Object> animationFrame,int time,int delay,ExCustomTitle.IgnoredType... ignoredOtherType);
 
     /**
      * Принудительно отправляет игроку, игнорируя очередь. После очередь продолжится с того же момента, что и остановилась
      * @param type Параметры можно посмотреть в комментарии к <b>{@link #sendAnimation}
      */
-    public <T> void forcedSendAnimation(Type type, List<T> animationFrame,int time,int delay,boolean... ignoredOtherType);
+    public void forcedSendAnimation(Type type, List<Object> animationFrame,int time,int delay,ExCustomTitle.IgnoredType... ignoredOtherType);
 
     enum Type{
         TITLE,
