@@ -1,6 +1,7 @@
 package vlavik.exos_titlemanagerapi.api.Title;
 
-import vlavik.exos_titlemanagerapi.api.Title.Object.ExCustomTitle;
+import vlavik.exos_titlemanagerapi.api.Title.Enums.IgnoredType;
+import vlavik.exos_titlemanagerapi.api.Title.Enums.TitleType;
 
 import java.util.List;
 
@@ -22,13 +23,13 @@ public interface TitleEditable {
      *                         продолжит отмененные задачи на том же времени
      *
      */
-    public <T> void send(Type type, T text, int time, ExCustomTitle.IgnoredType... ignoredOtherType);
+    public <T> void send(TitleType type, T text, int time, IgnoredType... ignoredOtherType);
 
     /**
      * Принудительно отправляет игроку, игнорируя очередь. После, очередь продолжит с того же момента, что и остановилась
      * @param text Параметры можно посмотреть в комментарии к <b>{@link #send}
      */
-    public <T> void forcedSend(Type type,T text, int time,ExCustomTitle.IgnoredType... ignoredOtherType);
+    public <T> void forcedSend(TitleType type, T text, int time, IgnoredType... ignoredOtherType);
 
     /**
      * Добавляет в очередь
@@ -36,12 +37,12 @@ public interface TitleEditable {
      * @param text Параметры можно посмотреть в комментарии к <b>{@link #send}</b>
      *             <p>
      */
-    public <T> void addQueue(Type type,T text,int time, int numberInQueue,ExCustomTitle.IgnoredType... ignoredOtherType);
+    public <T> void addQueue(TitleType type, T text, int time, int numberInQueue, IgnoredType... ignoredOtherType);
 
     /**
      * Очевидно, индексы начинаются с 0
      */
-    public void removeQueue(Type type,int numberInQueue);
+    public void removeQueue(TitleType type, int numberInQueue);
 
     /**
      *Принудительно обрывает текущую задачу/и.
@@ -51,7 +52,7 @@ public interface TitleEditable {
      *                  <p>
      * @param type отмененные типы(Обязательно хотя бы один)
      */
-    public void cancel(boolean cancelAll,Type... type);
+    public void cancel(boolean cancelAll, TitleType... type);
 
     /**
      * Добавляет анимацию в очередь
@@ -61,17 +62,11 @@ public interface TitleEditable {
      *                       <p>
      * @param delay Задержка между кадрами
      */
-    public void sendAnimation(Type type, List<Object> animationFrame,int time,int delay,ExCustomTitle.IgnoredType... ignoredOtherType);
+    public void sendAnimation(TitleType type, List<Object> animationFrame, int time, int delay, IgnoredType... ignoredOtherType);
 
     /**
      * Принудительно отправляет игроку, игнорируя очередь. После очередь продолжится с того же момента, что и остановилась
      * @param type Параметры можно посмотреть в комментарии к <b>{@link #sendAnimation}
      */
-    public void forcedSendAnimation(Type type, List<Object> animationFrame,int time,int delay,ExCustomTitle.IgnoredType... ignoredOtherType);
-
-    enum Type{
-        TITLE,
-        ACTIONBAR,
-        BOSS_BAR;
-    }
+    public void forcedSendAnimation(TitleType type, List<Object> animationFrame, int time, int delay, IgnoredType... ignoredOtherType);
 }

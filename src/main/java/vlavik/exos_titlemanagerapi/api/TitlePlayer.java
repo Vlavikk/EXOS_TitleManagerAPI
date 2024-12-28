@@ -2,6 +2,8 @@ package vlavik.exos_titlemanagerapi.api;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import vlavik.exos_titlemanagerapi.api.Title.Enums.IgnoredType;
+import vlavik.exos_titlemanagerapi.api.Title.Enums.TitleType;
 import vlavik.exos_titlemanagerapi.api.Title.Object.ExCustomTitle;
 import vlavik.exos_titlemanagerapi.api.Title.Object.TitleTask;
 import vlavik.exos_titlemanagerapi.api.Title.TitleEditable;
@@ -27,19 +29,19 @@ public class TitlePlayer implements TitleEditable {
     }
 
     @Override
-    public <T> void send(Type type, T text, int time, ExCustomTitle.IgnoredType... ignoredOtherType) {
+    public <T> void send(TitleType type, T text, int time, IgnoredType... ignoredOtherType) {
         handler(Objects.requireNonNull(
                 createCustomTitle(type, text, time, false, ignoredOtherType)));
     }
 
     @Override
-    public <T> void forcedSend(Type type, T text, int time, ExCustomTitle.IgnoredType... ignoredOtherType) {
+    public <T> void forcedSend(TitleType type, T text, int time, IgnoredType... ignoredOtherType) {
         handler( Objects.requireNonNull(
                 createCustomTitle(type, text, time, true, ignoredOtherType)));
     }
 
     @Override
-    public <T> void addQueue(Type type, T text, int time, int numberInQueue, ExCustomTitle.IgnoredType... ignoredOtherType) {
+    public <T> void addQueue(TitleType type, T text, int time, int numberInQueue, IgnoredType... ignoredOtherType) {
         ExCustomTitle title = Objects.requireNonNull(
                 createCustomTitle(type, text, time, true,ignoredOtherType));
         List<ExCustomTitle> list = getList(type);
@@ -53,15 +55,15 @@ public class TitlePlayer implements TitleEditable {
     }
 
     @Override
-    public void removeQueue(Type type, int numberInQueue) {
+    public void removeQueue(TitleType type, int numberInQueue) {
         List<ExCustomTitle> list = getList(type);
         if (numberInQueue == 0 || numberInQueue > list.size()-1){}
         else list.remove(numberInQueue);
     }
 
     @Override
-    public void cancel(boolean cancelAll,@NotNull Type... types) {
-        for (Type type : types) {
+    public void cancel(boolean cancelAll,@NotNull TitleType... types) {
+        for (TitleType type : types) {
             for (TitleTask task : tasks) {
                 if (task.getType() == type){
                     if (cancelAll) task.getList().clear();
@@ -69,13 +71,13 @@ public class TitlePlayer implements TitleEditable {
                 }}}
     }
     @Override
-    public void sendAnimation(Type type, List<Object> animationFrame, int time, int delay, ExCustomTitle.IgnoredType... ignoredOtherType) {
+    public void sendAnimation(TitleType type, List<Object> animationFrame, int time, int delay, IgnoredType... ignoredOtherType) {
         handler(Objects.requireNonNull(
                 createCustomTitleAnimation(type, animationFrame, time, false, delay,ignoredOtherType)));
     }
 
     @Override
-    public void forcedSendAnimation(Type type, List<Object> animationFrame, int time, int delay, ExCustomTitle.IgnoredType... ignoredOtherType) {
+    public void forcedSendAnimation(TitleType type, List<Object> animationFrame, int time, int delay, IgnoredType... ignoredOtherType) {
         handler(Objects.requireNonNull(
                 createCustomTitleAnimation(type, animationFrame, time, true, delay,ignoredOtherType)));
     }
@@ -100,7 +102,7 @@ public class TitlePlayer implements TitleEditable {
 
 
     private synchronized void handler(ExCustomTitle title) {
-        Type type = title.getType();
+        TitleType type = title.getType();
         List<ExCustomTitle> list = getList(type);
         if (!listIsContainsType(type)){
             TitleTask titleTask = new TitleTask(type,player,list);
@@ -111,9 +113,9 @@ public class TitlePlayer implements TitleEditable {
            getTaskByType(type).addTitle(title);
         }
     }
-    private ExCustomTitle createCustomTitle(Type type, Object text, int time, boolean forced, ExCustomTitle.IgnoredType... ignoredOtherType) {
+    private ExCustomTitle createCustomTitle(TitleType type, Object text, int time, boolean forced, IgnoredType... ignoredOtherType) {
         try {
-            ExCustomTitle.IgnoredType ignoredType = ignoredOtherType.length == 0 ? ExCustomTitle.IgnoredType.NONE : ignoredOtherType[0];
+            IgnoredType ignoredType = ignoredOtherType.length == 0 ? IgnoredType.NONE : ignoredOtherType[0];
             return new ExCustomTitle(type, text, time, forced, ignoredType);
 
         } catch (IllegalArgumentException e) {
@@ -121,9 +123,9 @@ public class TitlePlayer implements TitleEditable {
             return null;
         }
     }
-    private ExCustomTitle createCustomTitleAnimation(Type type, List<Object> list, int time, boolean forced,int delay, ExCustomTitle.IgnoredType... ignoredOtherType){
+    private ExCustomTitle createCustomTitleAnimation(TitleType type, List<Object> list, int time, boolean forced, int delay, IgnoredType... ignoredOtherType){
         try {
-            ExCustomTitle.IgnoredType ignoredType = ignoredOtherType.length == 0 ? ExCustomTitle.IgnoredType.NONE : ignoredOtherType[0];
+            IgnoredType ignoredType = ignoredOtherType.length == 0 ? IgnoredType.NONE : ignoredOtherType[0];
             return new ExCustomTitle(type, list, time, forced,delay, ignoredType);
 
         } catch (IllegalArgumentException e) {
@@ -132,14 +134,14 @@ public class TitlePlayer implements TitleEditable {
         }
     }
 
-    private List<ExCustomTitle> getList(Type type){
+    private List<ExCustomTitle> getList(TitleType type){
         return switch (type) {
             case TITLE -> titleList;
             case BOSS_BAR -> bossBarList;
             case ACTIONBAR -> actionBarList;
         };
     }
-    protected boolean listIsContainsType(Type type){
+    protected boolean listIsContainsType(TitleType type){
         if (tasks == null) return false;
         boolean contains = false;
         for (TitleTask task : tasks){
@@ -150,7 +152,7 @@ public class TitlePlayer implements TitleEditable {
         }
         return contains;
     }
-    protected TitleTask getTaskByType(Type type){
+    protected TitleTask getTaskByType(TitleType type){
         if (tasks == null) return null;
         for (TitleTask task : tasks){
             if (task.getType() == type) return task;

@@ -2,7 +2,8 @@ package vlavik.exos_titlemanagerapi.api.Title.Object;
 
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
-import vlavik.exos_titlemanagerapi.api.Title.TitleEditable;
+import vlavik.exos_titlemanagerapi.api.Title.Enums.IgnoredType;
+import vlavik.exos_titlemanagerapi.api.Title.Enums.TitleType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,7 +12,7 @@ import java.lang.annotation.Target;
 import java.util.List;
 
 public class ExCustomTitle {
-    private final TitleEditable.Type type;
+    private final TitleType type;
     private final Object text;
     private int time;
     private final boolean isForced;
@@ -22,7 +23,7 @@ public class ExCustomTitle {
     private final int delayAnimation;
     @forAnimation
     private final List<Object> animationFrame;
-    public ExCustomTitle(TitleEditable.Type type, Object text, int time, boolean forced, IgnoredType ignoredType){
+    public ExCustomTitle(TitleType type, Object text, int time, boolean forced, IgnoredType ignoredType){
         this.type = type;
         if (text instanceof String || text instanceof Component ||text instanceof List){
             this.text = text;
@@ -38,7 +39,7 @@ public class ExCustomTitle {
         this.animationFrame = null;
     }
     //Для анимаций
-    public ExCustomTitle(TitleEditable.Type type, List<Object> list, int time, boolean forced, int delay, IgnoredType ignoredType){
+    public ExCustomTitle(TitleType type, List<Object> list, int time, boolean forced, int delay, IgnoredType ignoredType){
         this.type = type;
         this.text = null;
         for (Object object : list){
@@ -52,17 +53,12 @@ public class ExCustomTitle {
         this.time = time;
         this.delayAnimation = delay;
     }
-    public enum IgnoredType {
-        NONE,
-        DELETE,
-        SAVE;
-    }
 
     public Object getText() {
         return text;
     }
 
-    public TitleEditable.@NotNull Type getType() {
+    public @NotNull TitleType getType() {
         return type;
     }
 

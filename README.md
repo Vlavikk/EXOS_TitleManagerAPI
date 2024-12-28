@@ -1,9 +1,11 @@
 ### Как использовать?
-# Пример
 ```java
 TitlePlayer titlePlayer = TitlePlayer.getTitlePlayer(player);
-titlePlayer.send(TitleEditable.Type.TITLE,"custom EXOS plugin!",20, ExCustomTitle.IgnoredType.SAVE);
+titlePlayer.send(TitleType.TITLE, "custom EXOS plugin!", 20, IgnoredType.SAVE);
 ```
+Некоторые параметры не интуитивно понятны, поэтому рекомендую прочитать комментарии к методам в интерфейсе
+При необходимости можно посмотреть реализацию методов в классе TitlePlayer
+##Внимание!
 Не создавайте класс TitlePlayer через
 ```java
 new TitlePlayer();

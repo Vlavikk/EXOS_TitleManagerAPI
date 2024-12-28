@@ -5,7 +5,7 @@ import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import vlavik.exos_titlemanagerapi.api.Listeners.PlayerQuit;
-import vlavik.exos_titlemanagerapi.api.Title.TitleEditable;
+import vlavik.exos_titlemanagerapi.api.Title.Enums.TitleType;
 import vlavik.exos_titlemanagerapi.api.TitlePlayer;
 
 
@@ -23,7 +23,7 @@ public final class EXOS_TitleManagerAPI extends JavaPlugin{
     @Override
     public void onDisable() {
         for (TitlePlayer player : TitlePlayer.titlePlayers.values()){
-            player.cancel(true, TitleEditable.Type.TITLE, TitleEditable.Type.ACTIONBAR, TitleEditable.Type.BOSS_BAR);
+            player.cancel(true, TitleType.TITLE, TitleType.ACTIONBAR, TitleType.BOSS_BAR);
         }
     }
 

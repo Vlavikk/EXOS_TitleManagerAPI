@@ -5,8 +5,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import vlavik.exos_titlemanagerapi.EXOS_TitleManagerAPI;
+import vlavik.exos_titlemanagerapi.api.Title.Enums.IgnoredType;
+import vlavik.exos_titlemanagerapi.api.Title.Enums.TitleType;
 import vlavik.exos_titlemanagerapi.api.Title.Packets.SendPacket;
-import vlavik.exos_titlemanagerapi.api.Title.TitleEditable;
 import vlavik.exos_titlemanagerapi.api.TitlePlayer;
 import vlavik.exos_titlemanagerapi.api.Utils;
 
@@ -19,12 +20,12 @@ public class TitleTask {
     private final Player player;
     private final List<ExCustomTitle> list;
     private final CopyOnWriteArrayList<TitleTask> tasks;
-    private final TitleEditable.Type type;
+    private final TitleType type;
     private final Task task = new Task();
     private final Handler handler = new Handler();
     private final AnimationTools animationTools = new AnimationTools();
 
-    public TitleTask(TitleEditable.Type type, Player player, List<ExCustomTitle> list) {
+    public TitleTask(TitleType type, Player player, List<ExCustomTitle> list) {
         this.player = player;
         this.titlePlayer = TitlePlayer.getTitlePlayer(player);
         this.tasks  = titlePlayer.getTasks();
@@ -42,7 +43,7 @@ public class TitleTask {
                 remove();
                 if (!list.isEmpty()){
                     send();
-                    if (titlePlayer.isEgoistTask() && title.getIgnoreOtherType() == ExCustomTitle.IgnoredType.NONE) handler.afterIgnoredOther();
+                    if (titlePlayer.isEgoistTask() && title.getIgnoreOtherType() == IgnoredType.NONE) handler.afterIgnoredOther();
                 }
                 else{
                     if (titlePlayer.isEgoistTask()) handler.afterIgnoredOther();
@@ -118,8 +119,8 @@ public class TitleTask {
             return list;
         }
         public void executorIgnoredOther(ExCustomTitle title){
-            ExCustomTitle.IgnoredType ignoredType = title.getIgnoreOtherType();
-            if (title.getIgnoreOtherType() != ExCustomTitle.IgnoredType.NONE){
+            IgnoredType ignoredType = title.getIgnoreOtherType();
+            if (title.getIgnoreOtherType() != IgnoredType.NONE){
                 titlePlayer.setEgoistTask(true);
                 for (TitleTask task : tasks){
                     if (task.getType() == title.getType()) continue;
@@ -308,7 +309,7 @@ public class TitleTask {
         list.remove(task.title);
         task.skip();
     }
-    public TitleEditable.Type getType() {
+    public TitleType getType() {
         return type;
     }
     public List<ExCustomTitle> getList() {
