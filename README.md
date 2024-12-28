@@ -1,4 +1,15 @@
-### Repository
+### Как использовать?
+# Пример
+```java
+TitlePlayer titlePlayer = TitlePlayer.getTitlePlayer(player);
+titlePlayer.send(TitleEditable.Type.TITLE,"custom EXOS plugin!",20, ExCustomTitle.IgnoredType.SAVE);
+```
+Не создавайте класс TitlePlayer через
+```java
+new TitlePlayer();
+```
+Это повлечет неправильную работу плагина
+### Добавление зависимости
 ```html
 <repository>
     <id>jitpack.io</id>
