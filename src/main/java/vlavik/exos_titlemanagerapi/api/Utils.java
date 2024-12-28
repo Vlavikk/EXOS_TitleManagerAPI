@@ -31,7 +31,7 @@ public class Utils {
 
             if (matcher.group(1) != null) { // Цветовой код &#RRGGBB
                 currentColor = TextColor.fromHexString("#" + matcher.group(1));
-            } else if (matcher.group(2) != null) { // Управляющий код стиля
+            } else if (matcher.group(2) != null) { // Управляющий кодами стиля
                 String styleCode = matcher.group(2);
                 switch (styleCode) {
                     case "l": // Жирный

@@ -6,7 +6,6 @@ import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 
 public class SendPacket {

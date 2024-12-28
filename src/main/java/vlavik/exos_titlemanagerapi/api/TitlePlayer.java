@@ -55,12 +55,8 @@ public class TitlePlayer implements TitleEditable {
     @Override
     public void removeQueue(Type type, int numberInQueue) {
         List<ExCustomTitle> list = getList(type);
-        if (numberInQueue == 0 || numberInQueue > list.size()-1){
-            return;
-        }
-        else{
-            list.remove(numberInQueue);
-        }
+        if (numberInQueue == 0 || numberInQueue > list.size()-1){}
+        else list.remove(numberInQueue);
     }
 
     @Override
@@ -70,11 +66,8 @@ public class TitlePlayer implements TitleEditable {
                 if (task.getType() == type){
                     if (cancelAll) task.getList().clear();
                     task.cancelTitle(cancelAll);
-                }
-            }
-        }
+                }}}
     }
-
     @Override
     public void sendAnimation(Type type, List<Object> animationFrame, int time, int delay, ExCustomTitle.IgnoredType... ignoredOtherType) {
         handler(Objects.requireNonNull(
@@ -87,7 +80,7 @@ public class TitlePlayer implements TitleEditable {
                 createCustomTitleAnimation(type, animationFrame, time, true, delay,ignoredOtherType)));
     }
     public static TitlePlayer getTitlePlayer(Player player){
-        return titlePlayers.getOrDefault(player.getName(),null);
+        return titlePlayers.getOrDefault(player.getName(),new TitlePlayer(player));
     }
     public Player getPlayer() {
         return player;
@@ -101,6 +94,10 @@ public class TitlePlayer implements TitleEditable {
     public CopyOnWriteArrayList<TitleTask> getTasks() {
         return tasks;
     }
+
+
+
+
 
     private synchronized void handler(ExCustomTitle title) {
         Type type = title.getType();
@@ -136,19 +133,11 @@ public class TitlePlayer implements TitleEditable {
     }
 
     private List<ExCustomTitle> getList(Type type){
-        List<ExCustomTitle> list = null;
-        switch (type){
-            case TITLE:
-                list = titleList;
-                break;
-            case BOSS_BAR:
-                list = bossBarList;
-                break;
-            case ACTIONBAR:
-                list = actionBarList;
-                break;
-        }
-        return list;
+        return switch (type) {
+            case TITLE -> titleList;
+            case BOSS_BAR -> bossBarList;
+            case ACTIONBAR -> actionBarList;
+        };
     }
     protected boolean listIsContainsType(Type type){
         if (tasks == null) return false;

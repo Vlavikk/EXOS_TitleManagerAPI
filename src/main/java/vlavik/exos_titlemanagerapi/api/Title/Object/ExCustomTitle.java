@@ -97,6 +97,6 @@ public class ExCustomTitle {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     public @interface forAnimation{
-        String message() default "Invalid name";
+        String message() default "";
     }
 }

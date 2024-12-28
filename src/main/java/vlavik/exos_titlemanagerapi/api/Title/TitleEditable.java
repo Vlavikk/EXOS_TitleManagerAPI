@@ -1,6 +1,5 @@
 package vlavik.exos_titlemanagerapi.api.Title;
 
-import net.kyori.adventure.text.Component;
 import vlavik.exos_titlemanagerapi.api.Title.Object.ExCustomTitle;
 
 import java.util.List;
@@ -15,12 +14,11 @@ public interface TitleEditable {
      *             <p>
      * @param time время отведенное на воспроизведение текста(можно писать свое) в <u>тиках</u>:<p>
      *            - "-1" для бесконечного времени<p>
-     *            - "0" стандартное время угасания(Не актуально для BossBar)
      *             <p>
      * @param ignoredOtherType если: <p>
      *                        - при пустом поле игнорируется(Ничего не отменяет)<p>
-     *                        - <u>true</u> отменит текущие задачи помимо выбранного type безвозвратно<p>
-     *                        - <u>false</u> отменит текущие задачи помимо выбранного type, после окончании данной задачи
+     *                        - <u>DELETE</u> отменит текущие задачи помимо выбранного type безвозвратно<p>
+     *                        - <u>SAVE</u> отменит текущие задачи помимо выбранного type, после окончании данной задачи
      *                         продолжит отмененные задачи на том же времени
      *
      */
@@ -34,7 +32,7 @@ public interface TitleEditable {
 
     /**
      * Добавляет в очередь
-     * @param numberInQueue номер позиции в очереди, смещает позиции (Минимальный индекс 1, в 0 индекс не добавлять);
+     * @param numberInQueue номер позиции в очереди, смещает позиции(Минимальный индекс 1, в 0 индекс не добавлять);
      * @param text Параметры можно посмотреть в комментарии к <b>{@link #send}</b>
      *             <p>
      */

@@ -4,7 +4,6 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.checkerframework.checker.units.qual.C;
 import vlavik.exos_titlemanagerapi.EXOS_TitleManagerAPI;
 import vlavik.exos_titlemanagerapi.api.Title.Packets.SendPacket;
 import vlavik.exos_titlemanagerapi.api.Title.TitleEditable;
