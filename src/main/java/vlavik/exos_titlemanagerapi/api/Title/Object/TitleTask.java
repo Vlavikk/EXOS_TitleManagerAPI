@@ -187,13 +187,13 @@ public class TitleTask {
             }.runTaskTimer(EXOS_TitleManagerAPI.getInstance(),title.getTime(),60);
         }
         public BukkitTask sendTitle(ExCustomTitle title,boolean isInfinite){
-            int period = isInfinite ? 60 : title.getTime();
+            int period = isInfinite ? 140 : title.getTime();
             Component text = getComponent(title);
                 return new BukkitRunnable() {
                     private boolean skip = false;
                     @Override
                     public void run() {
-                        if (isInfinite) SendPacket.sendTitle(player,text,period);
+                        if (isInfinite) SendPacket.sendTitle(player,text,period+2);
                         else {
                             if (!skip){
                             SendPacket.sendTitle(player, text, title.getTime());
