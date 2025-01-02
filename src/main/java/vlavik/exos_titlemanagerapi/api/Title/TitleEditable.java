@@ -1,5 +1,6 @@
 package vlavik.exos_titlemanagerapi.api.Title;
 
+import org.jetbrains.annotations.Nullable;
 import vlavik.exos_titlemanagerapi.api.Title.Enums.IgnoredType;
 import vlavik.exos_titlemanagerapi.api.Title.Enums.TitleType;
 
@@ -30,6 +31,27 @@ public interface TitleEditable {
      * @param text Параметры можно посмотреть в комментарии к <b>{@link #send}
      */
     public <T> void forcedSend(TitleType type, T text, int time, IgnoredType... ignoredOtherType);
+    /**
+     * !!!!ВРЕМЕННО!!!! <p>
+     * БЕЗ НЕОБХОДИМОСТИ СМОТРЕТЬ {@link #send} <p>
+     * Отправить Title отдельно
+     * @param text Параметры можно посмотреть в комментарии к <b>{@link #send}
+     * @param times лист с порядком: <p>
+     *              1 = время Заголовка на экране<p>
+     *              2 = время появления<p>
+     *              3 = время угасания
+     */
+    @Deprecated
+    public <T> void sendTitle(T text, List<Integer> times, IgnoredType... ignoredOtherType);
+
+    /**
+     * !!!!ВРЕМЕННО!!!! <p>
+     * БЕЗ НЕОБХОДИМОСТИ СМОТРЕТЬ {@link #send} <p>
+     * Принудительно отправить Title отдельно
+     * @param text Параметры можно посмотреть в комментарии к <b>{@link #sendTitle}
+     */
+    @Deprecated
+    public <T> void forceSendTitle(T text, List<Integer> times, IgnoredType... ignoredOtherType);
 
     /**
      * Добавляет в очередь

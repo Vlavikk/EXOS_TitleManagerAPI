@@ -3,12 +3,10 @@ package vlavik.exos_titlemanagerapi;
 import com.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import vlavik.exos_titlemanagerapi.api.Listeners.PlayerQuit;
 import vlavik.exos_titlemanagerapi.api.Title.Enums.TitleType;
 import vlavik.exos_titlemanagerapi.api.TitlePlayer;
-
 
 public final class EXOS_TitleManagerAPI extends JavaPlugin{
     private static EXOS_TitleManagerAPI main;

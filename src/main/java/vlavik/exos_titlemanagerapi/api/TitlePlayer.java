@@ -1,5 +1,6 @@
 package vlavik.exos_titlemanagerapi.api;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import vlavik.exos_titlemanagerapi.api.Title.Enums.IgnoredType;
@@ -38,6 +39,32 @@ public class TitlePlayer implements TitleEditable {
     public <T> void forcedSend(TitleType type, T text, int time, IgnoredType... ignoredOtherType) {
         handler( Objects.requireNonNull(
                 createCustomTitle(type, text, time, true, ignoredOtherType)));
+    }
+
+    @Override
+    public <T> void sendTitle(T text, List<Integer> times, IgnoredType... ignoredOtherType) {
+        ExCustomTitle title;
+        try {
+            IgnoredType ignoredType = ignoredOtherType.length == 0 ? IgnoredType.NONE : ignoredOtherType[0];
+            title = new ExCustomTitle(TitleType.TITLE, text, times, false, ignoredType);
+            handler(title);
+
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public <T> void forceSendTitle(T text, List<Integer> times, IgnoredType... ignoredOtherType) {
+        ExCustomTitle title;
+        try {
+            IgnoredType ignoredType = ignoredOtherType.length == 0 ? IgnoredType.NONE : ignoredOtherType[0];
+            title = new ExCustomTitle(TitleType.TITLE, text, times, true, ignoredType);
+            handler(title);
+
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

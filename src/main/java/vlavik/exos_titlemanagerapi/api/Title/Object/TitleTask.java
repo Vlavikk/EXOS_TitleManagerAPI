@@ -1,6 +1,7 @@
 package vlavik.exos_titlemanagerapi.api.Title.Object;
 
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -187,16 +188,21 @@ public class TitleTask {
             }.runTaskTimer(EXOS_TitleManagerAPI.getInstance(),title.getTime(),60);
         }
         public BukkitTask sendTitle(ExCustomTitle title,boolean isInfinite){
-            int period = isInfinite ? 140 : title.getTime();
+            List<Integer> i = title.getTitleTimes();
+            int b = 0;
+            for (int s : i){
+                b += s;
+            }
+            int period = isInfinite ? 140 : !i.isEmpty() ? b : title.getTime();
             Component text = getComponent(title);
                 return new BukkitRunnable() {
                     private boolean skip = false;
                     @Override
                     public void run() {
-                        if (isInfinite) SendPacket.sendTitle(player,text,period+2);
-                        else {
+                        if (isInfinite) SendPacket.sendTitle(player,text,period+4); // 4 = нахлест для непрерывной анимации
+                        else {                                                             // хватило бы и 1-2 при идеально работающем сервере
                             if (!skip){
-                            SendPacket.sendTitle(player, text, title.getTime());
+                            SendPacket.sendTitle(player, text, (!i.isEmpty() ? i.get(0) : 1) + 2, (i.size() >= 2 ? i.get(1) : 0),(i.size() >= 3 ? i.get(2) : 0));
                             skip = true;
                             }else{
                                 task.skip();
