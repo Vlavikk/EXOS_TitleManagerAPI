@@ -109,7 +109,8 @@ public class TitlePlayer implements TitleEditable {
                 createCustomTitleAnimation(type, animationFrame, time, true, delay,ignoredOtherType)));
     }
     public static TitlePlayer getTitlePlayer(Player player){
-        return titlePlayers.getOrDefault(player.getName(),new TitlePlayer(player));
+        if (titlePlayers.containsKey(player.getName())) return titlePlayers.get(player.getName());
+        else return new TitlePlayer(player);
     }
     public Player getPlayer() {
         return player;
