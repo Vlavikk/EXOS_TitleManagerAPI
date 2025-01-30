@@ -25,7 +25,7 @@ public class ExCustomTitle {
     private final int delayAnimation;
     @forAnimation
     private final List<Object> animationFrame;
-    private List<Integer> titleTimes;
+    private final List<Integer> titleTimes;
     public ExCustomTitle(TitleType type, Object text, int time, boolean forced, IgnoredType ignoredType){
         this.type = type;
         if (text instanceof String || text instanceof Component ||text instanceof List){
@@ -58,8 +58,8 @@ public class ExCustomTitle {
         this.delayAnimation = delay;
         this.titleTimes = null;
     }
-    //Для Title ВРЕМЕННО!!
 
+    //Для Title ВРЕМЕННО!!
     public ExCustomTitle(TitleType type, Object text, List<Integer> times, boolean forced, IgnoredType ignoredType){
         this.type = type;
         if (text instanceof String || text instanceof Component ||text instanceof List){

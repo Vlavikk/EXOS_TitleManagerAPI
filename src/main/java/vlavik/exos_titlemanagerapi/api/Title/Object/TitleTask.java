@@ -193,7 +193,7 @@ public class TitleTask {
             for (int s : i){
                 b += s;
             }
-            int period = isInfinite ? 140 : !i.isEmpty() ? b : title.getTime();
+            int period = isInfinite ? 140 : (!i.isEmpty() ? b : title.getTime());
             Component text = getComponent(title);
                 return new BukkitRunnable() {
                     private boolean skip = false;
@@ -308,8 +308,8 @@ public class TitleTask {
         if (fullStop){
             handler.afterIgnoredOther();
             task.cancel();
-            tasks.remove(this);
             handler.sendVoidMessage();
+            tasks.remove(this);
             return;
         }
         list.remove(task.title);

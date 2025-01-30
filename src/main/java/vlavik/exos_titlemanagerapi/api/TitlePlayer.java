@@ -93,8 +93,8 @@ public class TitlePlayer implements TitleEditable {
         for (TitleType type : types) {
             for (TitleTask task : tasks) {
                 if (task.getType() == type){
-                    if (cancelAll) task.getList().clear();
                     task.cancelTitle(cancelAll);
+                    if (cancelAll) task.getList().clear();
                 }}}
     }
     @Override
