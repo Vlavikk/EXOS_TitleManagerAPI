@@ -1,190 +1,247 @@
 package vlavik.exos_titlemanagerapi.api;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import vlavik.exos_titlemanagerapi.api.Title.Enums.IgnoredType;
-import vlavik.exos_titlemanagerapi.api.Title.Enums.TitleType;
-import vlavik.exos_titlemanagerapi.api.Title.Object.ExCustomTitle;
-import vlavik.exos_titlemanagerapi.api.Title.Object.TitleTask;
-import vlavik.exos_titlemanagerapi.api.Title.TitleEditable;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.IgnoredType;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.TitleType;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Object.AbstractClass.AbstractTitle;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Animation.ExActionBarAnimation;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Animation.ExBossBarAnimation;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Animation.ExTitleAnimation;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Default.ExActionBar;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Default.ExBossBar;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Default.ExTitle;
+import vlavik.exos_titlemanagerapi.api.TitleManager.TitleEditable;
 
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TitlePlayer implements TitleEditable {
     public static HashMap<String,TitlePlayer> titlePlayers = new HashMap<>();
-    protected final Player player;
-    protected CopyOnWriteArrayList<TitleTask> tasks;
-    protected List<ExCustomTitle> actionBarList;
-    protected List<ExCustomTitle> bossBarList;
-    protected List<ExCustomTitle> titleList;
-    private boolean egoistTask;
+
+    private final Player player;
+    private final List<AbstractTitle> actionBarList;
+    private final List<AbstractTitle> bossBarList;
+    private final List<AbstractTitle> titleList;
     public TitlePlayer(Player player){
         this.player = player;
-        tasks = new CopyOnWriteArrayList<>();
         actionBarList = new ArrayList<>();
         bossBarList = new ArrayList<>();
         titleList = new ArrayList<>();
         titlePlayers.put(player.getName(),this);
     }
 
+
+    @Override
+    public void send(AbstractTitle... titles) {
+        for (AbstractTitle title : titles){
+            TitleType type = title.getType();
+            List<AbstractTitle> list = getList(type);
+            if (list.isEmpty()){
+                list.addFirst(title);
+                sendInPlayerScreen(title);
+            }
+            else if (title.isForced()){
+                getCurrentTitle(type).ifPresent(t -> {
+                    t.pause(title.getIgnoredType());
+                    list.addFirst(title);
+                    sendInPlayerScreen(title);
+                });
+            }
+            else list.add(title);
+        }
+    }
+
     @Override
     public <T> void send(TitleType type, T text, int time, IgnoredType... ignoredOtherType) {
-        handler(Objects.requireNonNull(
-                createCustomTitle(type, text, time, false, ignoredOtherType)));
+        send(createTitle(type,text,time,false,ignoredOtherType));
     }
 
     @Override
-    public <T> void forcedSend(TitleType type, T text, int time, IgnoredType... ignoredOtherType) {
-        handler( Objects.requireNonNull(
-                createCustomTitle(type, text, time, true, ignoredOtherType)));
+    public <T> void forceSend(TitleType type, T text, int time, IgnoredType... ignoredOtherType) {
+        send(createTitle(type,text,time,true,ignoredOtherType));
     }
 
     @Override
-    public <T> void sendTitle(T text, List<Integer> times, IgnoredType... ignoredOtherType) {
-        ExCustomTitle title;
-        try {
-            IgnoredType ignoredType = ignoredOtherType.length == 0 ? IgnoredType.NONE : ignoredOtherType[0];
-            title = new ExCustomTitle(TitleType.TITLE, text, times, false, ignoredType);
-            handler(title);
-
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
+    public void sendAnimation(TitleType type, List<?> animationFrame, int time, int delayBetweenFrame, IgnoredType... ignoredOtherType) {
+        send(createTitleAnimation(type,animationFrame,time,delayBetweenFrame,false,ignoredOtherType));
     }
 
     @Override
-    public <T> void forceSendTitle(T text, List<Integer> times, IgnoredType... ignoredOtherType) {
-        ExCustomTitle title;
-        try {
-            IgnoredType ignoredType = ignoredOtherType.length == 0 ? IgnoredType.NONE : ignoredOtherType[0];
-            title = new ExCustomTitle(TitleType.TITLE, text, times, true, ignoredType);
-            handler(title);
-
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
+    public void forcedSendAnimation(TitleType type, List<?> animationFrame, int time, int delayBetweenFrame, IgnoredType... ignoredOtherType) {
+        send(createTitleAnimation(type,animationFrame,time,delayBetweenFrame,true,ignoredOtherType));
     }
 
     @Override
-    public <T> void addQueue(TitleType type, T text, int time, int numberInQueue, IgnoredType... ignoredOtherType) {
-        ExCustomTitle title = Objects.requireNonNull(
-                createCustomTitle(type, text, time, true,ignoredOtherType));
-        List<ExCustomTitle> list = getList(type);
-        if (numberInQueue == 0 || numberInQueue > list.size()-1){
-            list.add(title);
-        }
-        else{
-            list.add(numberInQueue,title);
-        }
+    public <T> void sendActionBar(T text, int time, IgnoredType... ignoredOtherType) {
+        send(createTitle(TitleType.ACTIONBAR,text,time,false,ignoredOtherType));
+    }
 
+    @Override
+    public <T> void sendBossBar(T text, int time, IgnoredType... ignoredOtherType) {
+        send(createTitle(TitleType.BOSS_BAR,text,time,false,ignoredOtherType));
+    }
+
+    @Override
+    public <T> void sendTitle(T text, int time, IgnoredType... ignoredOtherType) {
+        send(createTitle(TitleType.TITLE,text,time,false,ignoredOtherType));
+    }
+
+    @Override
+    public <T> void sendTitle(T text, int timeFadeIn, int time, int timeFadeOut, IgnoredType... ignoredOtherType) {
+        send(new ExTitle(text,timeFadeIn,time,timeFadeOut,ignoredOtherType));
+    }
+
+    @Override
+    public <T> void sendActionBar(T text, int time, boolean forced, IgnoredType... ignoredOtherType) {
+        send(createTitle(TitleType.ACTIONBAR,text,time,forced,ignoredOtherType));
+    }
+
+    @Override
+    public <T> void sendBossBar(T text, int time, boolean forced, IgnoredType... ignoredOtherType) {
+        AbstractTitle title = createTitle(TitleType.BOSS_BAR,text,time,forced,ignoredOtherType);
+        if (title != null) send(title);
+    }
+
+    @Override
+    public <T> void sendTitle(T text, int time, boolean forced, IgnoredType... ignoredOtherType) {
+        send(createTitle(TitleType.TITLE,text,time,forced,ignoredOtherType));
+    }
+
+    @Override
+    public <T> void sendTitle(T text, int timeFadeIn, int time, int timeFadeOut, boolean forced, IgnoredType... ignoredOtherType) {
+        send(new ExTitle(text,timeFadeIn,time,timeFadeOut,forced,ignoredOtherType));
+    }
+
+    @Override
+    public void sendAnimationActionBar(List<?> animationFrame, int time, int delayBetweenFrame, IgnoredType... ignoredOtherType) {
+        send(createTitleAnimation(TitleType.ACTIONBAR,animationFrame,time,delayBetweenFrame,false,ignoredOtherType));
+    }
+
+    @Override
+    public void sendAnimationBossBar(List<?> animationFrame, int time, int delayBetweenFrame, IgnoredType... ignoredOtherType) {
+        send(createTitleAnimation(TitleType.BOSS_BAR,animationFrame,time,delayBetweenFrame,false,ignoredOtherType));
+    }
+
+    @Override
+    public void sendAnimationTitle(List<?> animationFrame, int time, int delayBetweenFrame, IgnoredType... ignoredOtherType) {
+        send(createTitleAnimation(TitleType.TITLE,animationFrame,time,delayBetweenFrame,false,ignoredOtherType));
+    }
+
+    @Override
+    public void sendAnimationActionBar(List<?> animationFrame, int time, int delayBetweenFrame, boolean forced, IgnoredType... ignoredOtherType) {
+        send(createTitleAnimation(TitleType.ACTIONBAR,animationFrame,time,delayBetweenFrame,forced,ignoredOtherType));
+    }
+
+    @Override
+    public void sendAnimationBossBar(List<?> animationFrame, int time, int delayBetweenFrame, boolean forced, IgnoredType... ignoredOtherType) {
+        send(createTitleAnimation(TitleType.BOSS_BAR,animationFrame,time,delayBetweenFrame,forced,ignoredOtherType));
+    }
+
+    @Override
+    public void sendAnimationTitle(List<?> animationFrame, int time, int delayBetweenFrame, boolean forced, IgnoredType... ignoredOtherType) {
+        send(createTitleAnimation(TitleType.TITLE,animationFrame,time,delayBetweenFrame,forced,ignoredOtherType));
+    }
+
+    @Override
+    public void addQueue(AbstractTitle title,int numberInQueue) {
+        TitleType titleType = title.getType();
+        List<AbstractTitle> list = getList(titleType);
+        list.add(numberInQueue,title);
     }
 
     @Override
     public void removeQueue(TitleType type, int numberInQueue) {
-        List<ExCustomTitle> list = getList(type);
-        if (numberInQueue == 0 || numberInQueue > list.size()-1){}
-        else list.remove(numberInQueue);
+        List<AbstractTitle> list = getList(type);
+        list.remove(numberInQueue);
     }
 
     @Override
-    public void cancel(boolean cancelAll,@NotNull TitleType... types) {
-        for (TitleType type : types) {
-            for (TitleTask task : tasks) {
-                if (task.getType() == type){
-                    task.cancelTitle(cancelAll);
-                    if (cancelAll) task.getList().clear();
-                }}}
-    }
-    @Override
-    public void sendAnimation(TitleType type, List<Object> animationFrame, int time, int delay, IgnoredType... ignoredOtherType) {
-        handler(Objects.requireNonNull(
-                createCustomTitleAnimation(type, animationFrame, time, false, delay,ignoredOtherType)));
+    public void cancel(@NotNull TitleType... types) {
+        Arrays.stream(types).forEach(type ->{
+            getCurrentTitle(type).ifPresent( title ->{
+                title.stop();
+                title.sendVoidMassage(this);
+            });
+            getList(type).clear();
+        });
     }
 
     @Override
-    public void forcedSendAnimation(TitleType type, List<Object> animationFrame, int time, int delay, IgnoredType... ignoredOtherType) {
-        handler(Objects.requireNonNull(
-                createCustomTitleAnimation(type, animationFrame, time, true, delay,ignoredOtherType)));
+    public void next(TitleType type) {
+        List<AbstractTitle> list = getList(type);
+        getCurrentTitle(type).ifPresent(title -> {
+            title.stop();
+            list.removeFirst();
+
+            boolean nextTitleNotIgnoredType = list.isEmpty() || list.getFirst().getIgnoredType() == IgnoredType.NONE;
+
+            if (title.getIgnoredType() != IgnoredType.NONE && nextTitleNotIgnoredType){
+                Arrays.stream(TitleType.values())
+                        .filter(t -> t != type)
+                        .forEach(t ->
+                                getCurrentTitle(t).ifPresent(p -> {
+                                    if (p.getTime() == 0){
+                                        List<AbstractTitle> titleList = getList(t);
+                                        titleList.removeFirst();
+                                        getCurrentTitle(t).ifPresent(pNow -> pNow.send(this));
+                                    }else p.send(this);
+                                }
+                ));
+            }
+            if (!list.isEmpty()) sendInPlayerScreen(list.getFirst());
+            else if (type == TitleType.ACTIONBAR) title.sendVoidMassage(this); // убирает плавное исчезновение ACTIONBAR
+        });
     }
+
     public static TitlePlayer getTitlePlayer(Player player){
         if (titlePlayers.containsKey(player.getName())) return titlePlayers.get(player.getName());
         else return new TitlePlayer(player);
     }
-    public Player getPlayer() {
-        return player;
-    }
-    public boolean isEgoistTask() {
-        return egoistTask;
-    }
-    public void setEgoistTask(boolean egoistTask) {
-        this.egoistTask = egoistTask;
-    }
-    public CopyOnWriteArrayList<TitleTask> getTasks() {
-        return tasks;
-    }
-
-
-
-
-
-    private synchronized void handler(ExCustomTitle title) {
-        TitleType type = title.getType();
-        List<ExCustomTitle> list = getList(type);
-        if (!listIsContainsType(type)){
-            TitleTask titleTask = new TitleTask(type,player,list);
-            titleTask.addTitle(title);
-            tasks.add(titleTask);
-            if (!isEgoistTask()) titleTask.start();
-        }else {
-           getTaskByType(type).addTitle(title);
+    private void sendInPlayerScreen(AbstractTitle title){
+        if (title.getIgnoredType() != IgnoredType.NONE){
+            Arrays.stream(TitleType.values())
+                    .filter(type -> type != title.getType())
+                    .forEach(type -> getCurrentTitle(type)
+                            .ifPresent(p -> {
+                                p.pause(title.getIgnoredType());
+                                p.sendVoidMassage(this);
+                            }));
         }
+        title.send(this);
     }
-    private ExCustomTitle createCustomTitle(TitleType type, Object text, int time, boolean forced, IgnoredType... ignoredOtherType) {
-        try {
-            IgnoredType ignoredType = ignoredOtherType.length == 0 ? IgnoredType.NONE : ignoredOtherType[0];
-            return new ExCustomTitle(type, text, time, forced, ignoredType);
 
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            return null;
+    private <T> AbstractTitle createTitle(TitleType type, T text, int time,boolean force,IgnoredType... ignoredOtherType){
+        AbstractTitle title = null;
+        switch (type) {
+            case TITLE -> title = new ExTitle(text,time,force,ignoredOtherType);
+            case BOSS_BAR -> title = new ExBossBar(text,time,force,ignoredOtherType);
+            case ACTIONBAR -> title = new ExActionBar(text,time,force,ignoredOtherType);
         }
+        return title;
     }
-    private ExCustomTitle createCustomTitleAnimation(TitleType type, List<Object> list, int time, boolean forced, int delay, IgnoredType... ignoredOtherType){
-        try {
-            IgnoredType ignoredType = ignoredOtherType.length == 0 ? IgnoredType.NONE : ignoredOtherType[0];
-            return new ExCustomTitle(type, list, time, forced,delay, ignoredType);
-
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            return null;
+    private AbstractTitle createTitleAnimation(TitleType type, List<?> animationFrame, int time, int delayBetweenFrame,boolean force, IgnoredType... ignoredOtherType){
+        AbstractTitle title = null;
+        switch (type) {
+            case TITLE -> title = new ExTitleAnimation(animationFrame, time, delayBetweenFrame, force, ignoredOtherType);
+            case BOSS_BAR -> title = new ExBossBarAnimation(animationFrame, time, delayBetweenFrame, force, ignoredOtherType);
+            case ACTIONBAR -> title = new ExActionBarAnimation(animationFrame, time, delayBetweenFrame, force, ignoredOtherType);
         }
+        return title;
     }
 
-    private List<ExCustomTitle> getList(TitleType type){
+    private List<AbstractTitle> getList(TitleType type){
         return switch (type) {
             case TITLE -> titleList;
             case BOSS_BAR -> bossBarList;
             case ACTIONBAR -> actionBarList;
         };
     }
-    protected boolean listIsContainsType(TitleType type){
-        if (tasks == null) return false;
-        boolean contains = false;
-        for (TitleTask task : tasks){
-            if (task.getType() == type){
-                contains = true;
-                break;
-            }
-        }
-        return contains;
+    private Optional<AbstractTitle> getCurrentTitle(TitleType type){
+        List<AbstractTitle> list = getList(type);
+        if (list.isEmpty()) return Optional.empty();
+        return Optional.of(list.getFirst());
     }
-    protected TitleTask getTaskByType(TitleType type){
-        if (tasks == null) return null;
-        for (TitleTask task : tasks){
-            if (task.getType() == type) return task;
-        }
-        return null;
+    public Player getPlayer() {
+        return player;
     }
 }

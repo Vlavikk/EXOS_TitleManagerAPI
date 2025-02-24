@@ -1,4 +1,4 @@
-package vlavik.exos_titlemanagerapi.api.Title.Packets;
+package vlavik.exos_titlemanagerapi.api.TitleManager.Packets;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
@@ -14,25 +14,18 @@ public class SendPacket {
                 sendPacket(player,new WrapperPlayServerActionBar(text));
     }
 
-    /**
-     *
-     * @param times лист разделенный на элементы: <p>
-     *              1 - время на экране(обязательно)<p>
-     *              2 - время появления(не обязательно)<p>
-     *              3 - время угасания(не обязательно)<p>
-     */
-    public static void sendTitle(Player player,Component text,int... times){
+    public static void sendTitle(Player player,Component text,int timeFadeIn, int time,int timeFadeUot){
+        setTitleTime(player,timeFadeIn,time,timeFadeUot);
         WrapperPlayServerSetTitleText title = new WrapperPlayServerSetTitleText(
                 text
         );
         PacketEvents.getAPI().getPlayerManager().sendPacket(player,title);
-        setTitleTime(player,times);
     }
-    private static void setTitleTime(Player player,int... times){
+    private static void setTitleTime(Player player,int timeFadeIn, int time,int timeFadeUot){
         WrapperPlayServerSetTitleTimes title = new WrapperPlayServerSetTitleTimes(
-                times.length >= 2 ? times[1] : 0,
-                times.length >= 1 ? times[0] : 1,
-                times.length >= 3 ? times[2] : 0
+                timeFadeIn,
+                time,
+                timeFadeUot
         );
         PacketEvents.getAPI().getPlayerManager().sendPacket(player,title);
     }
