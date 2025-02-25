@@ -12,6 +12,7 @@ import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Default.ExActionBar;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Default.ExBossBar;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Default.ExTitle;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitleEditable;
+import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePattern.TitlePattern;
 
 import java.util.*;
 
@@ -19,6 +20,7 @@ public class TitlePlayer implements TitleEditable {
     public static HashMap<String,TitlePlayer> titlePlayers = new HashMap<>();
 
     private final Player player;
+    private final TitlePattern patterns;
     private final List<AbstractTitle> actionBarList;
     private final List<AbstractTitle> bossBarList;
     private final List<AbstractTitle> titleList;
@@ -27,6 +29,7 @@ public class TitlePlayer implements TitleEditable {
         actionBarList = new ArrayList<>();
         bossBarList = new ArrayList<>();
         titleList = new ArrayList<>();
+        patterns = new TitlePattern(this);
         titlePlayers.put(player.getName(),this);
     }
 
@@ -240,6 +243,9 @@ public class TitlePlayer implements TitleEditable {
         List<AbstractTitle> list = getList(type);
         if (list.isEmpty()) return Optional.empty();
         return Optional.of(list.getFirst());
+    }
+    public TitlePattern getTitlePatterns(){
+        return patterns;
     }
     public Player getPlayer() {
         return player;
