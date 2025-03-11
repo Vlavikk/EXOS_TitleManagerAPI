@@ -2,5 +2,8 @@ name: EXOS_TitleManagerAPI
 version: '${project.version}'
 main: vlavik.exos_titlemanagerapi.EXOS_TitleManagerAPI
 api-version: '1.19'
+commands:
+  title-manager:
+    description: "TitleManagerDebug"
 depend:
   - packetevents

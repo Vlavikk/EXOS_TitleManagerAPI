@@ -29,6 +29,6 @@ new TitlePlayer();
 <dependency>
     <groupId>com.github.Vlavikk</groupId>
     <artifactId>EXOS_TitleManagerAPI</artifactId>
-    <version>1.0.3</version>
+    <version>1.1.1</version>
 </dependency>
 ```

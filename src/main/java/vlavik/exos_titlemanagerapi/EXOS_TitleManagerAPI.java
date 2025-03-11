@@ -1,12 +1,17 @@
 package vlavik.exos_titlemanagerapi;
 
 import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import vlavik.exos_titlemanagerapi.Comand.DebugCommand;
 import vlavik.exos_titlemanagerapi.api.Listeners.PlayerQuit;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.TitleType;
-import vlavik.exos_titlemanagerapi.api.TitlePlayer;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Object.GameTime.GameTimeManager;
+import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
+
+import java.util.Objects;
 
 
 public final class EXOS_TitleManagerAPI extends JavaPlugin{
@@ -17,15 +22,17 @@ public final class EXOS_TitleManagerAPI extends JavaPlugin{
         main = this;
         PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
         PacketEvents.getAPI().init();
+        PacketEvents.getAPI().getEventManager().registerListener(new GameTimeManager(), PacketListenerPriority.LOWEST);
         Bukkit.getPluginManager().registerEvents( new PlayerQuit(),this);
+        Objects.requireNonNull(getCommand("title-manager")).setExecutor(new DebugCommand());
     }
 
     @Override
     public void onDisable() {
         TitlePlayer.titlePlayers.values().forEach(
                 p -> p.cancel(TitleType.TITLE, TitleType.ACTIONBAR, TitleType.BOSS_BAR));
+//        PacketEvents.getAPI().getEventManager().unregisterAllListeners();
     }
-
     public static EXOS_TitleManagerAPI getInstance() {
         return main;
     }

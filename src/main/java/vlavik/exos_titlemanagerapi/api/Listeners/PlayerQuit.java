@@ -5,7 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.TitleType;
-import vlavik.exos_titlemanagerapi.api.TitlePlayer;
+import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
 public class PlayerQuit implements Listener {
     @EventHandler

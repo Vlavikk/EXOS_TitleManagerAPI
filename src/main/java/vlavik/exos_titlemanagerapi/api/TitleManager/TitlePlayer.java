@@ -1,7 +1,9 @@
-package vlavik.exos_titlemanagerapi.api;
+package vlavik.exos_titlemanagerapi.api.TitleManager;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import vlavik.exos_titlemanagerapi.api.NotificationManager.Object.AbstractNotification;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.ForceType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.IgnoredType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.TitleType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.AbstractClass.AbstractTitle;
@@ -11,7 +13,6 @@ import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Animation.ExTitleAnim
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Default.ExActionBar;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Default.ExBossBar;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Default.ExTitle;
-import vlavik.exos_titlemanagerapi.api.TitleManager.TitleEditable;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePattern.TitlePattern;
 
 import java.util.*;
@@ -45,13 +46,22 @@ public class TitlePlayer implements TitleEditable {
             }
             else if (title.isForced()){
                 getCurrentTitle(type).ifPresent(t -> {
-                    t.pause(title.getIgnoredType());
+                    if (title.getForceType() == ForceType.DELETE){
+                        list.removeFirst();
+                        t.stop();
+                    }else t.pause(IgnoredType.NONE);
                     list.addFirst(title);
                     sendInPlayerScreen(title);
                 });
             }
             else list.add(title);
         }
+    }
+
+    @Override
+    public void send(AbstractNotification... notifications) {
+        Arrays.stream(notifications).forEach(
+                notification -> notification.send(this));
     }
 
     @Override
@@ -192,7 +202,7 @@ public class TitlePlayer implements TitleEditable {
                 ));
             }
             if (!list.isEmpty()) sendInPlayerScreen(list.getFirst());
-            else if (type == TitleType.ACTIONBAR) title.sendVoidMassage(this); // убирает плавное исчезновение ACTIONBAR
+//            else if (type == TitleType.ACTIONBAR) title.sendVoidMassage(this); // убирает плавное исчезновение ACTIONBAR
         });
     }
 

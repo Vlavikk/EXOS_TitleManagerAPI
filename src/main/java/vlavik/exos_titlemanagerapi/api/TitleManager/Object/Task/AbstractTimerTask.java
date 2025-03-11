@@ -13,7 +13,7 @@ public abstract class AbstractTimerTask {
     private int time = 0;
     private Optional<BukkitTask> task = Optional.empty();
     protected void startTimer(){
-        BukkitTask bukkitTask = new BukkitRunnable() {
+        BukkitTask bukkitTask =  new BukkitRunnable() {
             @Override
             public void run() {
                 time = time + period;

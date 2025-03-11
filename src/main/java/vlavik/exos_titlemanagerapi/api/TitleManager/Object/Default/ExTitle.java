@@ -5,14 +5,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import vlavik.exos_titlemanagerapi.EXOS_TitleManagerAPI;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.ForceType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.IgnoredType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.TitleType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.AbstractClass.AbstractDefaultTitle;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Packets.SendPacket;
-import vlavik.exos_titlemanagerapi.api.TitlePlayer;
+import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 import vlavik.exos_titlemanagerapi.api.Utils;
 
-import java.util.List;
 import java.util.Optional;
 
 public class ExTitle extends AbstractDefaultTitle {
@@ -30,7 +30,7 @@ public class ExTitle extends AbstractDefaultTitle {
     public <T> ExTitle(T text,int time,boolean forced,IgnoredType... ignoredType){
         setText(text);
         setTime(time);
-        setForced(forced);
+        setForce(forced);
         setIgnoredType(ignoredType);
     }
     public <T> ExTitle(T text,int timeFadeIn, int time, int timeFadeOut,IgnoredType... ignoredType){
@@ -45,7 +45,7 @@ public class ExTitle extends AbstractDefaultTitle {
         setTime(time);
         this.timeFadeIn = timeFadeIn;
         this.timeFadeOut = timeFadeOut;
-        setForced(forced);
+        setForce(forced);
         setIgnoredType(ignoredType);
     }
 
@@ -72,7 +72,7 @@ public class ExTitle extends AbstractDefaultTitle {
     }
 
 
-    public <T> void setSubTitle(T text){
+    public <T> void setSubTitle(T text){ //todo: не работает
         Optional<Component> component = Optional.empty();
         if (text instanceof String){
             component = Optional.of(Utils.convertToComponent((String) text));

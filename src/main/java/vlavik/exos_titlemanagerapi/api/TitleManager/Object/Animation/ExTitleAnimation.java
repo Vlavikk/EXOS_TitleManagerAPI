@@ -3,11 +3,12 @@ package vlavik.exos_titlemanagerapi.api.TitleManager.Object.Animation;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import vlavik.exos_titlemanagerapi.EXOS_TitleManagerAPI;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.ForceType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.IgnoredType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.TitleType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.AbstractClass.AbstractAnimationTitle;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Packets.SendPacket;
-import vlavik.exos_titlemanagerapi.api.TitlePlayer;
+import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class ExTitleAnimation extends AbstractAnimationTitle {
         setListFrames(frames);
         setTime(time);
         setDelayBetweenFrame(delayBetweenFrame);
-        setForced(forced);
+        setForce(forced);
         setIgnoredType(ignoredType);
     }
 

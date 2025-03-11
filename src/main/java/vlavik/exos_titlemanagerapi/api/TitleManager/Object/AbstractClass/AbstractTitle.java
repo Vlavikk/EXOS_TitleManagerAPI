@@ -2,25 +2,33 @@ package vlavik.exos_titlemanagerapi.api.TitleManager.Object.AbstractClass;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
+import vlavik.exos_titlemanagerapi.EXOS_TitleManagerAPI;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.ForceType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.IgnoredType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.TitleType;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Object.GameTime.GameTimeManager;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Task.AbstractTask;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Packets.SendPacket;
-import vlavik.exos_titlemanagerapi.api.TitlePlayer;
+import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
 public abstract class AbstractTitle extends AbstractTask {
     private int time;
     private boolean isForced;
+    private ForceType forceType = ForceType.SAVE;
     private IgnoredType ignoredType;
     private boolean isSending = false;
     private int gameTime = 0;
     private boolean isAnimation = false;
     private TitleType type;
-    public boolean send(TitlePlayer player){
+    public boolean send(TitlePlayer titlePlayer){
         if (!isSending){
-            sendLogic(player);
-            isSending = true;
-            return true;
+            if (time == 0) titlePlayer.next(type);
+            else{
+                if (isSetGameTime()) GameTimeManager.sendTime(titlePlayer.getPlayer(),gameTime,time);
+                sendLogic(titlePlayer);
+                isSending = true;
+                return true;
+            }
         }
         return false;
     }
@@ -74,8 +82,14 @@ public abstract class AbstractTitle extends AbstractTask {
     public TitleType getType() {
         return type;
     }
-    public void setForced(boolean forced) {
+    public void setForce(boolean forced) {
         isForced = forced;
+    }
+    public void setForceType(ForceType type) {
+        this.forceType = type;
+    }
+    public ForceType getForceType() {
+        return forceType;
     }
     public void setGameTime(int gameTime) {
         this.gameTime = gameTime;
@@ -88,6 +102,9 @@ public abstract class AbstractTitle extends AbstractTask {
     }
     public void setAnimation(boolean animation) {
         isAnimation = animation;
+    }
+    public boolean isSending() {
+        return isSending;
     }
     public void setIgnoredType(IgnoredType... ignoredType) {
         IgnoredType type = IgnoredType.NONE;

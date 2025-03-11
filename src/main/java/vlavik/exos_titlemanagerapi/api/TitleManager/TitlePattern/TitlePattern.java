@@ -2,10 +2,10 @@ package vlavik.exos_titlemanagerapi.api.TitleManager.TitlePattern;
 
 
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.IgnoredType;
-import vlavik.exos_titlemanagerapi.api.TitlePlayer;
+import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
 public class TitlePattern {
-    private TitlePlayer titlePlayer;
+    private final TitlePlayer titlePlayer;
     public TitlePattern(TitlePlayer titlePlayer){
         this.titlePlayer = titlePlayer;
     }

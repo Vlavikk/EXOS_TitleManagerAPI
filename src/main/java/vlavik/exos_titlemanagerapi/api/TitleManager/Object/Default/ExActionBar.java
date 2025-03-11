@@ -4,18 +4,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import vlavik.exos_titlemanagerapi.EXOS_TitleManagerAPI;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.ForceType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.IgnoredType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.TitleType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.AbstractClass.AbstractDefaultTitle;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Packets.SendPacket;
-import vlavik.exos_titlemanagerapi.api.TitlePlayer;
+import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
 public class ExActionBar extends AbstractDefaultTitle {
     {
         setType(TitleType.ACTIONBAR);
     }
     private boolean defaultTimeFadeOut = false;
-    private static final short DEFAULT_DELAY_FADE_OUT = 20;
+    private static final short DEFAULT_DELAY_FADE_OUT = 80;
 
     public <T> ExActionBar(T text, int time, IgnoredType... ignoredType){
         setText(text);
@@ -25,15 +26,16 @@ public class ExActionBar extends AbstractDefaultTitle {
     public <T> ExActionBar(T text,int time,boolean forced,IgnoredType... ignoredType){
         setText(text);
         setTime(time);
-        setForced(forced);
+        setForce(forced);
         setIgnoredType(ignoredType);
     }
     @Override
     public void sendLogic(TitlePlayer titlePlayer) {
         Player player = titlePlayer.getPlayer();
-        int titleTime = getTime();
-        int period = isInfinity() ? 40 :
-                (titleTime <= 40 ? titleTime : (titleTime % 5 == 0 ? (titleTime % 40 == 0 ? 40 : 5) : (titleTime % 2 == 0 ? 2 : 1)));
+        int updateTime = 30;
+        int titleTime = defaultTimeFadeOut ? getTime() - (DEFAULT_DELAY_FADE_OUT - updateTime) : getTime();
+        int period = isInfinity() ? updateTime :
+                (titleTime <= updateTime ? titleTime : (titleTime % 5 == 0 ? (titleTime % updateTime == 0 ? updateTime : 5) : (titleTime % 2 == 0 ? 2 : 1)));
         int cycleCount = isInfinity() ? 0 : titleTime / period;
         BukkitTask task = new BukkitRunnable() {
             private int cycle = 0;
@@ -42,10 +44,18 @@ public class ExActionBar extends AbstractDefaultTitle {
                 if (isInfinity()) SendPacket.sendActionBar(player,getText());
                 else {
                     if (cycle >= cycleCount){
-                        titlePlayer.next(getType());
-                        return;
+                        if (defaultTimeFadeOut) {
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    if (isSending()) titlePlayer.next(getType());
+                                    cancel();
+                                }
+                            }.runTaskLater(EXOS_TitleManagerAPI.getInstance(), DEFAULT_DELAY_FADE_OUT - updateTime);
+                            canselTask();
+                        }else titlePlayer.next(getType());
                     }
-                    if ((cycle * period) % 40 == 0){
+                    else if ((cycle * period) % updateTime == 0){
                         SendPacket.sendActionBar(player,getText());
                     }
                     cycle++;
@@ -55,17 +65,10 @@ public class ExActionBar extends AbstractDefaultTitle {
         setTask(task);
 
     }
-    @Deprecated
-    public void setDefaultTimeFadeOut(boolean defaultTimeFadeOut) { //TODO: Не работает
+    public void setDefaultTimeFadeOut(boolean defaultTimeFadeOut) {
         this.defaultTimeFadeOut = defaultTimeFadeOut;
     }
-    @Deprecated
     public boolean isDefaultTimeFadeOut() {
         return defaultTimeFadeOut;
     }
-    @Deprecated
-    public static int getDefaultTimeFadeOut(){
-        return DEFAULT_DELAY_FADE_OUT;
-    }
-
 }

@@ -1,5 +1,6 @@
 package vlavik.exos_titlemanagerapi.api.TitleManager;
 
+import vlavik.exos_titlemanagerapi.api.NotificationManager.Object.AbstractNotification;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.IgnoredType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.TitleType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.AbstractClass.AbstractTitle;
@@ -13,6 +14,7 @@ public interface TitleEditable {
      */
 
     void send(AbstractTitle... title);
+    void send(AbstractNotification... notifications);
     /**
      * Добавляет в конец очереди. Каждый тип имеет отдельную очередь <p>
      *
