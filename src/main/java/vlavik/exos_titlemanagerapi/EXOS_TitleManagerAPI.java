@@ -31,7 +31,6 @@ public final class EXOS_TitleManagerAPI extends JavaPlugin{
     public void onDisable() {
         TitlePlayer.titlePlayers.values().forEach(
                 p -> p.cancel(TitleType.TITLE, TitleType.ACTIONBAR, TitleType.BOSS_BAR));
-//        PacketEvents.getAPI().getEventManager().unregisterAllListeners();
     }
     public static EXOS_TitleManagerAPI getInstance() {
         return main;
