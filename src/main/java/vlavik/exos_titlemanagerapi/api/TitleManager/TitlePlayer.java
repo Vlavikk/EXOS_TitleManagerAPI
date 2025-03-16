@@ -21,16 +21,12 @@ public class TitlePlayer implements TitleEditable {
     public static HashMap<String,TitlePlayer> titlePlayers = new HashMap<>();
 
     private final Player player;
-    private final TitlePattern patterns;
-    private final List<AbstractTitle> actionBarList;
-    private final List<AbstractTitle> bossBarList;
-    private final List<AbstractTitle> titleList;
+    private final TitlePattern patterns = new TitlePattern(this);
+    private final List<AbstractTitle> actionBarList = new ArrayList<>();;
+    private final List<AbstractTitle> bossBarList = new ArrayList<>();;
+    private final List<AbstractTitle> titleList = new ArrayList<>();
     public TitlePlayer(Player player){
         this.player = player;
-        actionBarList = new ArrayList<>();
-        bossBarList = new ArrayList<>();
-        titleList = new ArrayList<>();
-        patterns = new TitlePattern(this);
         titlePlayers.put(player.getName(),this);
     }
 
@@ -193,16 +189,16 @@ public class TitlePlayer implements TitleEditable {
                         .filter(t -> t != type)
                         .forEach(t ->
                                 getCurrentTitle(t).ifPresent(p -> {
-                                    if (p.getTime() == 0){
-                                        List<AbstractTitle> titleList = getList(t);
-                                        titleList.removeFirst();
-                                        getCurrentTitle(t).ifPresent(pNow -> pNow.send(this));
-                                    }else p.send(this);
+//                                    if (p.getTime() == 0){ //TODO: фактически ненужная часть кода
+//                                        List<AbstractTitle> titleList = getList(t);
+//                                        titleList.removeFirst();
+//                                        getCurrentTitle(t).ifPresent(pNow -> pNow.send(this));
+//                                    }else
+                                        p.send(this);
                                 }
                 ));
             }
             if (!list.isEmpty()) sendInPlayerScreen(list.getFirst());
-//            else if (type == TitleType.ACTIONBAR) title.sendVoidMassage(this); // убирает плавное исчезновение ACTIONBAR
         });
     }
 

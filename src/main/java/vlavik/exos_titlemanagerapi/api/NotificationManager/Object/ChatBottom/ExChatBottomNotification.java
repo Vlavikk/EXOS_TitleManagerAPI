@@ -8,9 +8,12 @@ import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.ForceType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.NotificationPlace;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.NotificationType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Default.ExActionBar;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Object.GameTime.GameTimes;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class ExChatBottomNotification extends AbstractNotification {
@@ -18,6 +21,8 @@ public class ExChatBottomNotification extends AbstractNotification {
         setPlace(NotificationPlace.BOTTOM_CHAT);
     }
     private ChatBottomDecoration decoration = new ChatBottomDecoration();
+    private final HashMap<TitlePlayer,ExActionBar> syncActionBars = new HashMap<>();//TODO: Сделать удаление ненужных игроков
+
     public <T> ExChatBottomNotification(NotificationType type, T text){
         setType(type);
         setText(text);
@@ -30,10 +35,15 @@ public class ExChatBottomNotification extends AbstractNotification {
 
     @Override
     public void send(TitlePlayer titlePlayer) {
+        boolean isSending = syncActionBars.containsKey(titlePlayer) && syncActionBars.get(titlePlayer).isSending();
+        GameTimes.ChatBottomNotification gameTime = isSending ? GameTimes.ChatBottomNotification.SHAKE : GameTimes.ChatBottomNotification.FADE_IN;
+
         ExActionBar actionBar = new ExActionBar(getText(),220,isForce());
+        actionBar.setGameTime(gameTime.getStartTime(), gameTime.getActiveTime());
         actionBar.setDefaultTimeFadeOut(true);
         actionBar.setForceType(ForceType.DELETE);
-        actionBar.setGameTime(10);
+
+        syncActionBars.put(titlePlayer,actionBar);
         titlePlayer.send(actionBar);
     }
     @Override
