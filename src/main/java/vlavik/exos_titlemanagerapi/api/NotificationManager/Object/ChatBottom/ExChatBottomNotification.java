@@ -36,7 +36,11 @@ public class ExChatBottomNotification extends AbstractNotification {
     @Override
     public void send(TitlePlayer titlePlayer) {
         boolean isSending = syncActionBars.containsKey(titlePlayer) && syncActionBars.get(titlePlayer).isSending();
-        GameTimes.ChatBottomNotification gameTime = isSending ? GameTimes.ChatBottomNotification.SHAKE : GameTimes.ChatBottomNotification.FADE_IN;
+
+        GameTimes.ChatBottomNotification gameTime;
+        if (getType() == NotificationType.ERROR){
+            gameTime = isSending ? GameTimes.ChatBottomNotification.SHAKE : GameTimes.ChatBottomNotification.FADE_IN;
+        }else gameTime = GameTimes.ChatBottomNotification.FADE_IN;
 
         ExActionBar actionBar = new ExActionBar(getText(),220,isForce());
         actionBar.setGameTime(gameTime.getStartTime(), gameTime.getActiveTime());

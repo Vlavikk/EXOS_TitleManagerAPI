@@ -1,11 +1,10 @@
 package vlavik.exos_titlemanagerapi.api.TitleManager.Enums;
 
 public enum NotificationType {
-    //TODO: Не работает
-    ERROR("\u1B26"),
-    WARNING(""),
-    SUCCESSFUL(""),
-    NONE("");
+    ERROR("\u1B26"), // При повторе ошибки вместо нового выезд ошибки будет трястись, хз не играл
+    WARNING(""), // каждый вызов будет выезжать
+    SUCCESSFUL(""),// тоже
+    NONE("");//хз не придумал
     private final String icon;
 
     NotificationType(String icon) {
