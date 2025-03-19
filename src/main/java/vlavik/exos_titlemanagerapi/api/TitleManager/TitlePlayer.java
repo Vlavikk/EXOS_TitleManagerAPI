@@ -44,8 +44,8 @@ public class TitlePlayer implements TitleEditable {
                 getCurrentTitle(type).ifPresent(t -> {
                     if (title.getForceType() == ForceType.DELETE){
                         list.removeFirst();
-                        t.stop();
-                    }else t.pause(IgnoredType.NONE);
+                        t.stop(this);
+                    }else t.pause(this,IgnoredType.NONE);
                     list.addFirst(title);
                     sendInPlayerScreen(title);
                 });
@@ -168,7 +168,7 @@ public class TitlePlayer implements TitleEditable {
     public void cancel(@NotNull TitleType... types) {
         Arrays.stream(types).forEach(type ->{
             getCurrentTitle(type).ifPresent( title ->{
-                title.stop();
+                title.stop(this);
                 title.sendVoidMassage(this);
             });
             getList(type).clear();
@@ -179,7 +179,7 @@ public class TitlePlayer implements TitleEditable {
     public void next(TitleType type) {
         List<AbstractTitle> list = getList(type);
         getCurrentTitle(type).ifPresent(title -> {
-            title.stop();
+            title.stop(this);
             list.removeFirst();
 
             boolean nextTitleNotIgnoredType = list.isEmpty() || list.getFirst().getIgnoredType() == IgnoredType.NONE;
@@ -212,7 +212,7 @@ public class TitlePlayer implements TitleEditable {
                     .filter(type -> type != title.getType())
                     .forEach(type -> getCurrentTitle(type)
                             .ifPresent(p -> {
-                                p.pause(title.getIgnoredType());
+                                p.pause(this,title.getIgnoredType());
                                 p.sendVoidMassage(this);
                             }));
         }

@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import vlavik.exos_titlemanagerapi.EXOS_TitleManagerAPI;
+import vlavik.exos_titlemanagerapi.api.NotificationManager.Object.ChatBottom.ExChatBottomNotification;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.ForceType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.IgnoredType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.TitleType;
@@ -11,12 +12,15 @@ import vlavik.exos_titlemanagerapi.api.TitleManager.Object.AbstractClass.Abstrac
 import vlavik.exos_titlemanagerapi.api.TitleManager.Packets.SendPacket;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
+import java.util.Optional;
+
 public class ExActionBar extends AbstractDefaultTitle {
     {
         setType(TitleType.ACTIONBAR);
     }
     private boolean defaultTimeFadeOut = false;
     private static final short DEFAULT_DELAY_FADE_OUT = 80;
+    private Optional<ExChatBottomNotification> extendFromNotification = Optional.empty();
 
     public <T> ExActionBar(T text, int time, IgnoredType... ignoredType){
         setText(text);
@@ -29,6 +33,17 @@ public class ExActionBar extends AbstractDefaultTitle {
         setForce(forced);
         setIgnoredType(ignoredType);
     }
+    public <T> ExActionBar(T text,int time,boolean forced,ExChatBottomNotification exChatBottomNotification,IgnoredType... ignoredType){
+        setText(text);
+        setTime(time);
+        setForce(forced);
+        setIgnoredType(ignoredType);
+
+        extendFromNotification = Optional.of(exChatBottomNotification); // ебать какой костыль
+        //TODO: По хорошему исправить, пук пук
+        //TODO: ааааааааааааааааааааааааааааааа
+    }
+
     @Override
     public void sendLogic(TitlePlayer titlePlayer) {
         Player player = titlePlayer.getPlayer();
@@ -70,5 +85,8 @@ public class ExActionBar extends AbstractDefaultTitle {
     }
     public boolean isDefaultTimeFadeOut() {
         return defaultTimeFadeOut;
+    }
+    public Optional<ExChatBottomNotification> getExtendFromNotification() {
+        return extendFromNotification;
     }
 }

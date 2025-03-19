@@ -6,6 +6,7 @@ import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import vlavik.exos_titlemanagerapi.Comand.DebugCommand;
+import vlavik.exos_titlemanagerapi.api.Listeners.HashListener;
 import vlavik.exos_titlemanagerapi.api.Listeners.PlayerQuit;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.TitleType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.GameTime.GameTimeManager;
@@ -22,8 +23,9 @@ public final class EXOS_TitleManagerAPI extends JavaPlugin{
         main = this;
         PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
         PacketEvents.getAPI().init();
-        PacketEvents.getAPI().getEventManager().registerListener(new GameTimeManager(), PacketListenerPriority.LOWEST);
+        PacketEvents.getAPI().getEventManager().registerListener(new GameTimeManager(), PacketListenerPriority.NORMAL);
         Bukkit.getPluginManager().registerEvents( new PlayerQuit(),this);
+        Bukkit.getPluginManager().registerEvents( new HashListener(),this);
         Objects.requireNonNull(getCommand("title-manager")).setExecutor(new DebugCommand());
     }
 

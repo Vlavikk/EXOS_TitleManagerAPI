@@ -1,8 +1,10 @@
 package vlavik.exos_titlemanagerapi.api.TitleManager.Object.AbstractClass;
 
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import vlavik.exos_titlemanagerapi.EXOS_TitleManagerAPI;
+import vlavik.exos_titlemanagerapi.api.Events.ExTitleEndEvent;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.ForceType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.IgnoredType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.TitleType;
@@ -30,7 +32,7 @@ public abstract class AbstractTitle extends AbstractTask {
             }
         }
     }
-    public void pause(IgnoredType action){
+    public void pause(TitlePlayer titlePlayer,IgnoredType action){
         canselTask();
         stopTimer();
 
@@ -40,12 +42,14 @@ public abstract class AbstractTitle extends AbstractTask {
             case SAVE -> deleteTime = 20;} //если остаточное время больше 20, то сохраниться : нет
         time = time - getTimerTime() > deleteTime ? time - getTimerTime() : 0;
         isSending = false;
+        Bukkit.getPluginManager().callEvent(new ExTitleEndEvent(titlePlayer,this));
     }
-    public void stop(){
+    public void stop(TitlePlayer titlePlayer){
         canselTask();
         stopTimer();
         time = 0;
         isSending = false;
+        Bukkit.getPluginManager().callEvent(new ExTitleEndEvent(titlePlayer,this));
     }
     public abstract void sendLogic(TitlePlayer player);
     public void sendVoidMassage(TitlePlayer titlePlayer){
