@@ -12,7 +12,6 @@ import vlavik.exos_titlemanagerapi.api.TitleManager.Object.GameTime.GameTimes;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
 import java.util.HashMap;
-import java.util.List;
 
 
 public class ExChatBottomNotification extends AbstractNotification {
@@ -90,8 +89,8 @@ public class ExChatBottomNotification extends AbstractNotification {
                 // Определение цвета символа
                 TextColor finalColor;
                 if (isSpecialChar(c)) {
-                    // Используем специальный цвет из LineColors
-                    finalColor = currentOverrideSpecColor;
+                    if (currentOverrideSpecColor != null) finalColor = currentOverrideSpecColor;
+                    else finalColor = colors.specialColor();
                 } else if (currentOverrideColor != null) {
                     // Переопределенный цвет для обычных символов
                     finalColor = currentOverrideColor;
@@ -121,7 +120,7 @@ public class ExChatBottomNotification extends AbstractNotification {
             case 'c' -> 1; // Красный
             case 'a' -> 2; // Зеленый
             case 'e' -> 3; // Желтый
-            default -> -0;
+            default -> 0;
         };
         return TextColor.color(78, 92, Math.min(baseValue + offset, 255));
     }
@@ -130,9 +129,6 @@ public class ExChatBottomNotification extends AbstractNotification {
     private LineColors calculateColors(int totalLines, int lineIndex) {
         int baseB = getBaseValue(totalLines, lineIndex) ;
         int specialB = getSpecialValue(totalLines, lineIndex);
-
-        // Ограничиваем значения в пределах 22-33 для спецсимволов
-        int clampedSpecialB = Math.min(specialB, totalLines == 1 ? 25 : (lineIndex == 0 ? 29 : 33));
 
         return new LineColors(
                 TextColor.color(78, 92, Math.min(baseB, 255)),
@@ -150,7 +146,12 @@ public class ExChatBottomNotification extends AbstractNotification {
         return totalLines == 1 ? 22 : (lineIndex == 0 ? 26 : 30);
     }
     private boolean isSpecialChar(char c) {
-        return List.of('ё','й','Ё','Й').contains(c);
+        boolean d = c == 'ё' || c == 'й' ||c == 'Ё' ||c == 'Й';
+        if (d){
+            System.out.println("да спекц");
+            return true;
+        }else return false;
+//        return c == 'ё' || c == 'й' ||c == 'Ё' ||c == 'Й';
     }
     record LineColors(TextColor baseColor, TextColor specialColor) {}
 
