@@ -146,12 +146,7 @@ public class ExChatBottomNotification extends AbstractNotification {
         return totalLines == 1 ? 22 : (lineIndex == 0 ? 26 : 30);
     }
     private boolean isSpecialChar(char c) {
-        boolean d = c == 'ё' || c == 'й' ||c == 'Ё' ||c == 'Й';
-        if (d){
-            System.out.println("да спекц");
-            return true;
-        }else return false;
-//        return c == 'ё' || c == 'й' ||c == 'Ё' ||c == 'Й';
+        return c == 'ё' || c == 'й' ||c == 'Ё' ||c == 'Й';
     }
     record LineColors(TextColor baseColor, TextColor specialColor) {}
 

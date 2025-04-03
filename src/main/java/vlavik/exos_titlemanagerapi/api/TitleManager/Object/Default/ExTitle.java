@@ -57,10 +57,10 @@ public class ExTitle extends AbstractDefaultTitle {
             private boolean skip = false;
             @Override
             public void run() {
-                if (isInfinity()) SendPacket.sendTitle(player,getText(),timeFadeIn,period+4,timeFadeOut);
+                if (isInfinity()) SendPacket.sendTitle(player,getText(),timeFadeIn,period+4,timeFadeOut,subTitle);
                 else {
                     if (!skip){
-                        SendPacket.sendTitle(player,getText(),timeFadeIn,period+4,timeFadeOut);
+                        SendPacket.sendTitle(player,getText(),timeFadeIn,period+4,timeFadeOut,subTitle);
                         skip = true;
                     }else titlePlayer.next(getType());
 
@@ -70,9 +70,7 @@ public class ExTitle extends AbstractDefaultTitle {
         setTask(task);
         startTimer();
     }
-
-
-    public <T> void setSubTitle(T text){ //todo: не работает
+    public <T> void setSubTitle(T text){
         Optional<Component> component = Optional.empty();
         if (text instanceof String){
             component = Optional.of(Utils.convertToComponent((String) text));

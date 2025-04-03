@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 import java.util.EnumSet;
+import java.util.Optional;
 
 public class SendPacket {
     public static void sendActionBar(Player player, Component text){
@@ -14,8 +15,9 @@ public class SendPacket {
                 sendPacket(player,new WrapperPlayServerActionBar(text));
     }
 
-    public static void sendTitle(Player player,Component text,int timeFadeIn, int time,int timeFadeUot){
+    public static void sendTitle(Player player, Component text, int timeFadeIn, int time, int timeFadeUot, Optional<Component> subTitle){
         setTitleTime(player,timeFadeIn,time,timeFadeUot);
+        subTitle.ifPresent(t -> setSubTitle(player,t));
         WrapperPlayServerSetTitleText title = new WrapperPlayServerSetTitleText(
                 text
         );
@@ -26,6 +28,12 @@ public class SendPacket {
                 timeFadeIn,
                 time,
                 timeFadeUot
+        );
+        PacketEvents.getAPI().getPlayerManager().sendPacket(player,title);
+    }
+    private static void setSubTitle(Player player,Component subtitle){
+        WrapperPlayServerSetTitleSubtitle title = new WrapperPlayServerSetTitleSubtitle(
+                subtitle
         );
         PacketEvents.getAPI().getPlayerManager().sendPacket(player,title);
     }

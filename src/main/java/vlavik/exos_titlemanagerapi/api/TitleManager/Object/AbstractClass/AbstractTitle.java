@@ -13,6 +13,8 @@ import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Task.AbstractTask;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Packets.SendPacket;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
+import java.util.Optional;
+
 public abstract class AbstractTitle extends AbstractTask {
     private int time;
     private boolean isForced;
@@ -55,7 +57,7 @@ public abstract class AbstractTitle extends AbstractTask {
     public void sendVoidMassage(TitlePlayer titlePlayer){
         Player player = titlePlayer.getPlayer();
         switch (type){
-            case TITLE: SendPacket.sendTitle(player,Component.text(" "),0,1,0); break;
+            case TITLE: SendPacket.sendTitle(player,Component.text(" "),0,1,0, Optional.empty()); break;
             case BOSS_BAR: SendPacket.removeBossBar(player); break;
             case ACTIONBAR: SendPacket.sendActionBar(player,Component.text(" "));break;
         }

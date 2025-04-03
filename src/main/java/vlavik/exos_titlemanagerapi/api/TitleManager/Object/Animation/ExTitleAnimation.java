@@ -11,6 +11,7 @@ import vlavik.exos_titlemanagerapi.api.TitleManager.Packets.SendPacket;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ExTitleAnimation extends AbstractAnimationTitle {
     {
@@ -41,7 +42,7 @@ public class ExTitleAnimation extends AbstractAnimationTitle {
             @Override
             public void run() {
                 if (frame >= getListFrames().size()) frame = 0;
-                SendPacket.sendTitle(titlePlayer.getPlayer(),getListFrames().get(frame),timeFadeIn,getTime()+1,timeFadeOut);
+                SendPacket.sendTitle(titlePlayer.getPlayer(),getListFrames().get(frame),timeFadeIn,getTime()+1,timeFadeOut, Optional.empty());
                 if (time >= getTime()){
                     titlePlayer.next(getType());
                     return;
