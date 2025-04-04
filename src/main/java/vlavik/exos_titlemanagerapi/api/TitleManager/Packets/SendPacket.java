@@ -31,7 +31,7 @@ public class SendPacket {
         );
         PacketEvents.getAPI().getPlayerManager().sendPacket(player,title);
     }
-    private static void setSubTitle(Player player,Component subtitle){
+    public static void setSubTitle(Player player,Component subtitle){
         WrapperPlayServerSetTitleSubtitle title = new WrapperPlayServerSetTitleSubtitle(
                 subtitle
         );

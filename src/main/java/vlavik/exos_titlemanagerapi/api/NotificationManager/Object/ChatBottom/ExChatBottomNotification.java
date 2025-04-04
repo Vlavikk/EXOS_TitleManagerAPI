@@ -3,6 +3,7 @@ package vlavik.exos_titlemanagerapi.api.NotificationManager.Object.ChatBottom;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Sound;
 import vlavik.exos_titlemanagerapi.api.NotificationManager.Object.AbstractNotification;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.ForceType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.NotificationPlace;
@@ -12,6 +13,7 @@ import vlavik.exos_titlemanagerapi.api.TitleManager.Object.GameTime.GameTimes;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 
 public class ExChatBottomNotification extends AbstractNotification {
@@ -19,6 +21,7 @@ public class ExChatBottomNotification extends AbstractNotification {
         setPlace(NotificationPlace.BOTTOM_CHAT);
     }
     private ChatBottomDecoration decoration = new ChatBottomDecoration();
+    private Optional<SoundSettings> sound = Optional.empty();
     private final HashMap<TitlePlayer,ExActionBar> syncActionBars = new HashMap<>();
 
     public <T> ExChatBottomNotification(NotificationType type, T text){
@@ -34,16 +37,26 @@ public class ExChatBottomNotification extends AbstractNotification {
     @Override
     public void send(TitlePlayer titlePlayer) {
         boolean isSending = syncActionBars.containsKey(titlePlayer) && syncActionBars.get(titlePlayer).isSending();
+        GameTimes.ChatBottomNotification animation = isSending ? GameTimes.ChatBottomNotification.SHAKE : GameTimes.ChatBottomNotification.FADE_IN;
 
+        //Гей тайм
         GameTimes.ChatBottomNotification gameTime;
-        if (getType() == NotificationType.ERROR){
-            gameTime = isSending ? GameTimes.ChatBottomNotification.SHAKE : GameTimes.ChatBottomNotification.FADE_IN;
-        }else gameTime = GameTimes.ChatBottomNotification.FADE_IN;
+        if (getType() == NotificationType.ERROR) gameTime = animation;
+        else gameTime = GameTimes.ChatBottomNotification.FADE_IN;
 
+        //Базовая настройка
         ExActionBar actionBar = new ExActionBar(getText(),220,isForce(),this);
         actionBar.setGameTime(gameTime.getStartTime(), gameTime.getActiveTime());
         actionBar.setDefaultTimeFadeOut(true);
         actionBar.setForceType(ForceType.DELETE);
+
+        //Звук
+        getSound().ifPresent(s -> actionBar.setSound(
+                animation == GameTimes.ChatBottomNotification.FADE_IN
+                        ? s.fadeSound()
+                        : s.shakeSound(),
+                false
+        ));
 
         syncActionBars.put(titlePlayer,actionBar);
         titlePlayer.send(actionBar);
@@ -124,7 +137,6 @@ public class ExChatBottomNotification extends AbstractNotification {
         };
         return TextColor.color(78, 92, Math.min(baseValue + offset, 255));
     }
-
     // Метод расчета цветов
     private LineColors calculateColors(int totalLines, int lineIndex) {
         int baseB = getBaseValue(totalLines, lineIndex) ;
@@ -155,5 +167,12 @@ public class ExChatBottomNotification extends AbstractNotification {
     }
     public void setDecoration(ChatBottomDecoration decoration){
         this.decoration = decoration;
+    }
+    public record SoundSettings(Sound fadeSound, Sound shakeSound){}
+    public void setSound(Sound fadeSound, Sound shakeSound) {
+        this.sound = Optional.of(new SoundSettings(fadeSound,shakeSound));
+    }
+    public Optional<SoundSettings> getSound() {
+        return sound;
     }
 }

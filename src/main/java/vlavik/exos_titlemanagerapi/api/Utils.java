@@ -3,6 +3,8 @@ package vlavik.exos_titlemanagerapi.api;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -78,5 +80,8 @@ public class Utils {
         }
 
         return component;
+    }
+    public static void playSoundPlayer(Player player, Sound sound){
+        player.playSound(player,sound,1,1);
     }
 }

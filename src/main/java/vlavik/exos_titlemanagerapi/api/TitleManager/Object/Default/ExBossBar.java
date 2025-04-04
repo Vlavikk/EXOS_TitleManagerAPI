@@ -4,7 +4,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import vlavik.exos_titlemanagerapi.EXOS_TitleManagerAPI;
-import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.ForceType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.IgnoredType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.TitleType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.AbstractClass.AbstractDefaultTitle;
@@ -40,6 +39,7 @@ public class ExBossBar extends AbstractDefaultTitle {
                     titlePlayer.next(getType());
                 }
             }.runTaskTimer(EXOS_TitleManagerAPI.getInstance(),getTime(),2);
+            playSound(player);
             setTask(task);
         }
     }

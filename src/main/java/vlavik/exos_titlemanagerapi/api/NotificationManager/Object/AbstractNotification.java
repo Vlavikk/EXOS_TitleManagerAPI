@@ -2,12 +2,10 @@ package vlavik.exos_titlemanagerapi.api.NotificationManager.Object;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.TextColor;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.NotificationPlace;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.NotificationType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 public abstract class AbstractNotification {

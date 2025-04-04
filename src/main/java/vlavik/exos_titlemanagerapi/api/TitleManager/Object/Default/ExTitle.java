@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import vlavik.exos_titlemanagerapi.EXOS_TitleManagerAPI;
-import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.ForceType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.IgnoredType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.TitleType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.AbstractClass.AbstractDefaultTitle;
@@ -52,8 +51,8 @@ public class ExTitle extends AbstractDefaultTitle {
     @Override
     public void sendLogic(TitlePlayer titlePlayer) {
         Player player = titlePlayer.getPlayer();
-        int period = isInfinity() ? 140 : getTime();    // 4 = нахлест для непрерывной анимации
-        BukkitTask task = new BukkitRunnable() {        // хватило бы и 1-2 при идеально работающем сервере
+        int period = isInfinity() ? 140 : getTime();
+        BukkitTask task = new BukkitRunnable() {
             private boolean skip = false;
             @Override
             public void run() {
@@ -63,10 +62,10 @@ public class ExTitle extends AbstractDefaultTitle {
                         SendPacket.sendTitle(player,getText(),timeFadeIn,period+4,timeFadeOut,subTitle);
                         skip = true;
                     }else titlePlayer.next(getType());
-
                 }
             }
         }.runTaskTimer(EXOS_TitleManagerAPI.getInstance(),0,period);
+        playSound(player);
         setTask(task);
         startTimer();
     }
