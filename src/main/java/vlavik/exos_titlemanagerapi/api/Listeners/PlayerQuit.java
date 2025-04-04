@@ -16,6 +16,7 @@ public class PlayerQuit implements Listener {
                     TitleType.TITLE,
                     TitleType.ACTIONBAR,
                     TitleType.BOSS_BAR);
+            TitlePlayer.getTitlePlayer(player).terminate();
         }
     }
 }

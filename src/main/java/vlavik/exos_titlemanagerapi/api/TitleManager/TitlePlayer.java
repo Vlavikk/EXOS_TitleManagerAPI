@@ -188,14 +188,7 @@ public class TitlePlayer implements TitleEditable {
                 Arrays.stream(TitleType.values())
                         .filter(t -> t != type)
                         .forEach(t ->
-                                getCurrentTitle(t).ifPresent(p -> {
-//                                    if (p.getTime() == 0){ //TODO: фактически ненужная часть кода
-//                                        List<AbstractTitle> titleList = getList(t);
-//                                        titleList.removeFirst();
-//                                        getCurrentTitle(t).ifPresent(pNow -> pNow.send(this));
-//                                    }else
-                                        p.send(this);
-                                }
+                        getCurrentTitle(t).ifPresent(p -> p.send(this)
                 ));
             }
             if (!list.isEmpty()) sendInPlayerScreen(list.getFirst());
@@ -205,6 +198,9 @@ public class TitlePlayer implements TitleEditable {
     public static TitlePlayer getTitlePlayer(Player player){
         if (titlePlayers.containsKey(player.getName())) return titlePlayers.get(player.getName());
         else return new TitlePlayer(player);
+    }
+    public void terminate(){
+        titlePlayers.remove(player.getName());
     }
     private void sendInPlayerScreen(AbstractTitle title){
         if (title.getIgnoredType() != IgnoredType.NONE){
