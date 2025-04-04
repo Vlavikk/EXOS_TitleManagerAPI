@@ -57,11 +57,13 @@ public class SendPacket {
         PacketEvents.getAPI().getPlayerManager().sendPacket(player,bossBar);
     }
     public static void updateNameBossBar(Player player,Component newTitle){
-        WrapperPlayServerBossBar bossBar = new WrapperPlayServerBossBar(
-                player.getUniqueId(),
-                WrapperPlayServerBossBar.Action.UPDATE_TITLE
-        );
-        bossBar.setTitle(newTitle);
-        PacketEvents.getAPI().getPlayerManager().sendPacket(player,bossBar);
+        removeBossBar(player);
+        sendBossBar(player,newTitle);
+//        WrapperPlayServerBossBar bossBar = new WrapperPlayServerBossBar(
+//                player.getUniqueId(),
+//                WrapperPlayServerBossBar.Action.ADD
+//        );
+//        bossBar.setTitle(newTitle);
+//        PacketEvents.getAPI().getPlayerManager().sendPacket(player,bossBar);
     }
 }

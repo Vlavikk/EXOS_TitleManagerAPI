@@ -45,8 +45,8 @@ public class ExTitleAnimation extends AbstractAnimationTitle {
             @Override
             public void run() {
                 if (frame >= getListFrames().size()) frame = 0;
-                SendPacket.sendTitle(titlePlayer.getPlayer(),getListFrames().get(frame),timeFadeIn,getTime()+1,timeFadeOut,subTitle);
-                if (time >= getTime()){
+                SendPacket.sendTitle(titlePlayer.getPlayer(),getListFrames().get(frame),timeFadeIn,getDelayBetweenFrame()+2,timeFadeOut,subTitle);
+                if (time >= getTime() && !isInfinity()){
                     titlePlayer.next(getType());
                     return;
                 }

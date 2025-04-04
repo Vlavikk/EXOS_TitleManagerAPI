@@ -42,7 +42,7 @@ public class ExActionBarAnimation extends AbstractAnimationTitle {
             public void run() {
                 if (frame >= getListFrames().size()) frame = 0;
                 SendPacket.sendActionBar(titlePlayer.getPlayer(),getListFrames().get(frame));
-                if (time >= getTime()){
+                if (time >= getTime() && !isInfinity()){
                     titlePlayer.next(getType());
                     return;
                 }
