@@ -2,6 +2,9 @@ package vlavik.exos_titlemanagerapi.api.TitleManager.TitlePattern;
 
 
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.IgnoredType;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Default.ExActionBar;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Default.ExBossBar;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Default.ExTitle;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
 public class TitlePattern {
@@ -11,13 +14,19 @@ public class TitlePattern {
     }
 
     private final String text = "\u1900";
-    public void sendDarkInBossBar(int time, boolean force, IgnoredType... ignoredType){
-        titlePlayer.sendBossBar(text,time,force,ignoredType);
+    public ExBossBar sendDarkInBossBar(int time, boolean force, IgnoredType... ignoredType){
+        ExBossBar exBossBar = new ExBossBar(text,time,force,ignoredType);
+        titlePlayer.send(exBossBar);
+        return exBossBar;
     }
-    public void sendDarkInActionBar(int time, boolean force, IgnoredType... ignoredType){
-        titlePlayer.sendActionBar(text,time,force,ignoredType);
+    public ExActionBar sendDarkInActionBar(int time, boolean force, IgnoredType... ignoredType){
+        ExActionBar exActionBar = new ExActionBar(text,time,force,ignoredType);
+        titlePlayer.send(exActionBar);
+        return exActionBar;
     }
-    public void sendDarkInTitle(int timeFadeIn,int time,int timeFadOut, boolean force, IgnoredType... ignoredType){
-        titlePlayer.sendTitle(text,timeFadeIn,time,timeFadOut,force,ignoredType);
+    public ExTitle sendDarkInTitle(int timeFadeIn,int time,int timeFadOut, boolean force, IgnoredType... ignoredType){
+        ExTitle exTitle = new ExTitle(text,timeFadeIn,time,timeFadOut,force,ignoredType);
+        titlePlayer.send(exTitle);
+        return exTitle;
     }
 }
