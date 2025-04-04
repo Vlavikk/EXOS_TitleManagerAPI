@@ -1,5 +1,6 @@
 package vlavik.exos_titlemanagerapi.api.TitleManager.Object.Animation;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import vlavik.exos_titlemanagerapi.EXOS_TitleManagerAPI;
@@ -9,6 +10,7 @@ import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.TitleType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.AbstractClass.AbstractAnimationTitle;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Packets.SendPacket;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
+import vlavik.exos_titlemanagerapi.api.Utils;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +22,7 @@ public class ExTitleAnimation extends AbstractAnimationTitle {
     }
     private final int timeFadeIn = 0; //у анимации нет появления и затухания
     private final int timeFadeOut = 0;
+    private Optional<Component> subTitle = Optional.empty();
     public ExTitleAnimation(List<?> frames, int time, int delayBetweenFrame, IgnoredType... ignoredType){
         setListFrames(frames);
         setTime(time);
@@ -42,7 +45,7 @@ public class ExTitleAnimation extends AbstractAnimationTitle {
             @Override
             public void run() {
                 if (frame >= getListFrames().size()) frame = 0;
-                SendPacket.sendTitle(titlePlayer.getPlayer(),getListFrames().get(frame),timeFadeIn,getTime()+1,timeFadeOut, Optional.empty());
+                SendPacket.sendTitle(titlePlayer.getPlayer(),getListFrames().get(frame),timeFadeIn,getTime()+1,timeFadeOut,subTitle);
                 if (time >= getTime()){
                     titlePlayer.next(getType());
                     return;
@@ -53,5 +56,14 @@ public class ExTitleAnimation extends AbstractAnimationTitle {
         }.runTaskTimer(EXOS_TitleManagerAPI.getInstance(),0,getDelayBetweenFrame());
         setTask(task);
 
+    }
+    public <T> void setSubTitle(T text){
+        Optional<Component> component = Optional.empty();
+        if (text instanceof String){
+            component = Optional.of(Utils.convertToComponent((String) text));
+        }else if(text instanceof Component){
+            component = Optional.of((Component) text);
+        }
+        if (component.isPresent()) subTitle = component;
     }
 }
