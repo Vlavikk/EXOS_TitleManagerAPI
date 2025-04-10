@@ -2,7 +2,6 @@ package vlavik.exos_titlemanagerapi.api.Events;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
 import vlavik.exos_titlemanagerapi.api.NotificationManager.Object.AbstractNotification;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 

@@ -51,7 +51,7 @@ public class ExTitle extends AbstractDefaultTitle {
     @Override
     public void sendLogic(TitlePlayer titlePlayer) {
         Player player = titlePlayer.getPlayer();
-        int period = isInfinity() ? 140 : getTime();
+        int period = isInfinity() ? 140 : getTime() + timeFadeIn + timeFadeOut;
         BukkitTask task = new BukkitRunnable() {
             private boolean skip = false;
             @Override
@@ -59,7 +59,7 @@ public class ExTitle extends AbstractDefaultTitle {
                 if (isInfinity()) SendPacket.sendTitle(player,getText(),timeFadeIn,period+4,timeFadeOut,subTitle);
                 else {
                     if (!skip){
-                        SendPacket.sendTitle(player,getText(),timeFadeIn,period+4,timeFadeOut,subTitle);
+                        SendPacket.sendTitle(player,getText(),timeFadeIn,getTime()+4,timeFadeOut,subTitle);
                         skip = true;
                     }else titlePlayer.next(getType());
                 }

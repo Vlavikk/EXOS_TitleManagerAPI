@@ -30,11 +30,13 @@ public class GameTimeManager implements PacketListener{
     public void onPacketSend(PacketSendEvent event) {
         Player player = event.getPlayer();
         if (event.getPacketType() != PacketType.Play.Server.TIME_UPDATE) return;
-        WrapperPlayServerTimeUpdate packet = new WrapperPlayServerTimeUpdate(event);
-        if (playersAsyncTime.containsKey(player.getName())) {
-            if (skipPaket.contains(player.getName()) && packet.isTickTime()){//если время в тиках значит пакет наш слоняра
-                skipPaket.remove(player.getName());
-            }else event.setCancelled(true);
+        if (player != null){
+            WrapperPlayServerTimeUpdate packet = new WrapperPlayServerTimeUpdate(event);
+            if (playersAsyncTime.containsKey(player.getName())) {
+                if (skipPaket.contains(player.getName()) && packet.isTickTime()){//если время в тиках значит пакет наш слоняра
+                     skipPaket.remove(player.getName());
+                }else event.setCancelled(true);
+            }
         }
     }
 }
