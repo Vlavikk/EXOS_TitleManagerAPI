@@ -4,9 +4,7 @@ import com.github.retrooper.packetevents.event.PacketListener;
 import com.github.retrooper.packetevents.event.PacketSendEvent;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTimeUpdate;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import vlavik.exos_titlemanagerapi.EXOS_TitleManagerAPI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +35,17 @@ public class GameTimeManager implements PacketListener{
                      skipPaket.remove(player.getName());
                 }else event.setCancelled(true);
             }
+//            else {
+//                TitlePlayer titlePlayer = TitlePlayer.getTitlePlayer(player);
+//                Arrays.stream(TitleType.values()).forEach(type -> {
+//                    titlePlayer.getCurrentTitle(type).flatMap(AbstractTitle::getGameTime).ifPresent(gameTime -> {
+//                        if (packet.getWorldAge() >= gameTime.getStartTime()
+//                        && packet.getWorldAge() <= gameTime.getStartTime() + gameTime.getActiveTime()) {
+//                            packet.setWorldAge(gameTime.getStartTime() + gameTime.getActiveTime() + 10);
+//                        }
+//                    });
+//                });
+//            }
         }
     }
 }

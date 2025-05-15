@@ -3,6 +3,7 @@ package vlavik.exos_titlemanagerapi.api.Listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import vlavik.exos_titlemanagerapi.EXOS_TitleManagerAPI;
 import vlavik.exos_titlemanagerapi.api.Events.ExNotificationEndEvent;
 import vlavik.exos_titlemanagerapi.api.Events.ExTitleEndEvent;
 import vlavik.exos_titlemanagerapi.api.NotificationManager.Object.ChatBottom.ExChatBottomNotification;
@@ -20,8 +21,9 @@ public class HashListener implements Listener {
         if (title.getType() == TitleType.ACTIONBAR && !title.isAnimation()){
             ExActionBar actionBar = (ExActionBar) title;
             actionBar.getExtendFromNotification().ifPresent(notification ->{
-                Bukkit.getPluginManager().callEvent(new ExNotificationEndEvent(e.getTitlePlayer(),
-                        actionBar.getExtendFromNotification().get()));
+                Bukkit.getScheduler().runTask(EXOS_TitleManagerAPI.getInstance(),()->
+                        Bukkit.getPluginManager().callEvent(new ExNotificationEndEvent(e.getTitlePlayer(),
+                        actionBar.getExtendFromNotification().get())));
 
                 if (notification instanceof ExChatBottomNotification exChatBottomNotification){
                     HashMap<TitlePlayer,ExActionBar> handlers = exChatBottomNotification.getHandlers();

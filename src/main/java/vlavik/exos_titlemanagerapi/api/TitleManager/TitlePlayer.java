@@ -241,7 +241,7 @@ public class TitlePlayer implements TitleEditable {
             case ACTIONBAR -> actionBarList;
         };
     }
-    private Optional<AbstractTitle> getCurrentTitle(TitleType type){
+    public Optional<AbstractTitle> getCurrentTitle(TitleType type){
         List<AbstractTitle> list = getList(type);
         if (list.isEmpty()) return Optional.empty();
         return Optional.of(list.getFirst());

@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import vlavik.exos_titlemanagerapi.EXOS_TitleManagerAPI;
 import vlavik.exos_titlemanagerapi.api.Events.ExTitleEndEvent;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.ForceType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.IgnoredType;
@@ -48,7 +49,9 @@ public abstract class AbstractTitle extends AbstractTask {
             case SAVE -> deleteTime = 20;} //если остаточное время больше 20, то сохраниться : нет
         time = time - getTimerTime() > deleteTime ? time - getTimerTime() : 0;
         isSending = false;
-        Bukkit.getPluginManager().callEvent(new ExTitleEndEvent(titlePlayer,this));
+        Bukkit.getScheduler().runTask(EXOS_TitleManagerAPI.getInstance(),()->{
+            Bukkit.getPluginManager().callEvent(new ExTitleEndEvent(titlePlayer,this));
+        });
     }
     public void stop(TitlePlayer titlePlayer){
         if (type == TitleType.TITLE) SendPacket.setSubTitle(titlePlayer.getPlayer(),Component.text(""));
@@ -56,12 +59,14 @@ public abstract class AbstractTitle extends AbstractTask {
         stopTimer();
         time = 0;
         isSending = false;
-        Bukkit.getPluginManager().callEvent(new ExTitleEndEvent(titlePlayer,this));
+        Bukkit.getScheduler().runTask(EXOS_TitleManagerAPI.getInstance(),()->{
+            Bukkit.getPluginManager().callEvent(new ExTitleEndEvent(titlePlayer,this));
+        });
     }
     public void sendVoidMassage(TitlePlayer titlePlayer){
         Player player = titlePlayer.getPlayer();
         switch (type){
-            case TITLE: SendPacket.sendTitle(player,Component.text(" "),0,1,0, Optional.empty()); break;
+            case TITLE: SendPacket.sendTitle(player,Component.text(""),0,1,0, Optional.empty()); break;
             case BOSS_BAR: SendPacket.removeBossBar(player); break;
             case ACTIONBAR: SendPacket.sendActionBar(player,Component.text(" "));break;
         }

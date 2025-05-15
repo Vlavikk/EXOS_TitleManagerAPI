@@ -109,7 +109,7 @@ public class ExChatBottomNotification extends AbstractNotification {
                 }
 
                 if (c == ' ') {
-                    colorIndex = colorIndex + 3;
+                    colorIndex = colorIndex + 2; // смещение после пробела
                     lineComponent.append(Component.text(".").color(TextColor.color(78, 92, 7)));
                 }
                 else lineComponent.append(Component.text(c).color(finalColor));
