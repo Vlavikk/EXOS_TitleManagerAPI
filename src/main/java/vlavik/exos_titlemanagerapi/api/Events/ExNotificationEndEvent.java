@@ -3,12 +3,13 @@ package vlavik.exos_titlemanagerapi.api.Events;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import vlavik.exos_titlemanagerapi.api.NotificationManager.Object.AbstractNotification;
+import vlavik.exos_titlemanagerapi.api.NotificationManager.Object.ChatBottom.ExChatBottomNotification;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
 public class ExNotificationEndEvent extends Event {
     public TitlePlayer titlePlayer;
-    public AbstractNotification abstractNotification;
-    public ExNotificationEndEvent(TitlePlayer titlePlayer,AbstractNotification abstractNotification){
+    public ExChatBottomNotification abstractNotification;
+    public ExNotificationEndEvent(TitlePlayer titlePlayer, ExChatBottomNotification abstractNotification){
         this.titlePlayer = titlePlayer;
         this.abstractNotification = abstractNotification;
     }
@@ -17,7 +18,7 @@ public class ExNotificationEndEvent extends Event {
         return titlePlayer;
     }
 
-    public AbstractNotification getAbstractNotification() {
+    public ExChatBottomNotification getAbstractNotification() {
         return abstractNotification;
     }
 

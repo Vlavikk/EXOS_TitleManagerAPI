@@ -234,7 +234,7 @@ public class TitlePlayer implements TitleEditable {
         return title;
     }
 
-    private List<AbstractTitle> getList(TitleType type){
+    public List<AbstractTitle> getList(TitleType type){
         return switch (type) {
             case TITLE -> titleList;
             case BOSS_BAR -> bossBarList;

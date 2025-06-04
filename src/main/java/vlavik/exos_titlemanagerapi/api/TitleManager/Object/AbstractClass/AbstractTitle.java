@@ -22,21 +22,17 @@ public abstract class AbstractTitle extends AbstractTask {
     private TitleType type;
     private boolean isForced;
     private IgnoredType ignoredType;
-    private boolean isSending = false;
     private ForceType forceType = ForceType.SAVE;
     private boolean isAnimation = false;
     private Optional<SoundSettings> sound = Optional.empty();
     private Optional<GameTime> gameTime = Optional.empty();
     public abstract void sendLogic(TitlePlayer player);
     public void send(TitlePlayer titlePlayer){
-        if (!isSending){
             if (time == 0) titlePlayer.next(type);
             else{
-                gameTime.ifPresent(g -> GameTimeManager.sendTime(titlePlayer.getPlayer(),g.getStartTime(),g.getActiveTime()));
                 sendLogic(titlePlayer);
-                isSending = true;
+                gameTime.ifPresent(g -> GameTimeManager.sendTime(titlePlayer.getPlayer(),g.getStartTime(),g.getActiveTime()));
             }
-        }
     }
     public void pause(TitlePlayer titlePlayer,IgnoredType action){
         canselTask();
@@ -48,7 +44,6 @@ public abstract class AbstractTitle extends AbstractTask {
             case DELETE -> deleteTime ++;// больше не проиграется и удалиться из списка PS: time + 1 никогда не может быть такого
             case SAVE -> deleteTime = 20;} //если остаточное время больше 20, то сохраниться : нет
         time = time - getTimerTime() > deleteTime ? time - getTimerTime() : 0;
-        isSending = false;
         Bukkit.getScheduler().runTask(EXOS_TitleManagerAPI.getInstance(),()->{
             Bukkit.getPluginManager().callEvent(new ExTitleEndEvent(titlePlayer,this));
         });
@@ -58,7 +53,6 @@ public abstract class AbstractTitle extends AbstractTask {
         canselTask();
         stopTimer();
         time = 0;
-        isSending = false;
         Bukkit.getScheduler().runTask(EXOS_TitleManagerAPI.getInstance(),()->{
             Bukkit.getPluginManager().callEvent(new ExTitleEndEvent(titlePlayer,this));
         });
@@ -129,9 +123,9 @@ public abstract class AbstractTitle extends AbstractTask {
     public void setType(TitleType type) {
         this.type = type;
     }
-    public boolean isSending() {
-        return isSending;
-    }
+//    public boolean isSending() {
+//        return isSending;
+//    }
     public void setSound(Sound sound,boolean playedOnes) {
         this.sound = Optional.of(new SoundSettings(sound,playedOnes));
     }

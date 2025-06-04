@@ -19,7 +19,6 @@ public class ExActionBar extends AbstractDefaultTitle {
     }
     private boolean defaultTimeFadeOut = false;
     private static final short DEFAULT_DELAY_FADE_OUT = 80;
-    private Optional<ExChatBottomNotification> extendFromNotification = Optional.empty();
 
     public <T> ExActionBar(T text, int time, IgnoredType... ignoredType){
         setText(text);
@@ -37,10 +36,6 @@ public class ExActionBar extends AbstractDefaultTitle {
         setTime(time);
         setForce(forced);
         setIgnoredType(ignoredType);
-
-        extendFromNotification = Optional.of(exChatBottomNotification); // ебать какой костыль
-        //TODO: По хорошему исправить, пук пук
-        //TODO: ааааааааааааааааааааааааааааааа
     }
 
     @Override
@@ -62,7 +57,7 @@ public class ExActionBar extends AbstractDefaultTitle {
                             new BukkitRunnable() {
                                 @Override
                                 public void run() {
-                                    if (isSending()) titlePlayer.next(getType());
+//                                    if (isSending()) titlePlayer.next(getType());
                                     cancel();
                                 }
                             }.runTaskLater(EXOS_TitleManagerAPI.getInstance(), DEFAULT_DELAY_FADE_OUT - updateTime);
@@ -85,8 +80,5 @@ public class ExActionBar extends AbstractDefaultTitle {
     }
     public boolean isDefaultTimeFadeOut() {
         return defaultTimeFadeOut;
-    }
-    public Optional<ExChatBottomNotification> getExtendFromNotification() {
-        return extendFromNotification;
     }
 }

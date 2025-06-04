@@ -7,7 +7,7 @@ import java.util.Optional;
 
 
 public abstract class AbstractDefaultTitle extends AbstractTitle {
-    private Component text;
+    protected Component text;
     public <T> void setText(T text){
         Optional<Component> component = Optional.empty();
         if (text instanceof String){

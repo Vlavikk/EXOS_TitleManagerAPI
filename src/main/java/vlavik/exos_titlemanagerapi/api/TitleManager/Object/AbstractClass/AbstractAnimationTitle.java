@@ -12,7 +12,7 @@ public abstract class AbstractAnimationTitle extends AbstractTitle{
     {
         setType(TitleType.TITLE);
     }
-    private List<Component> listFrames;
+    protected List<Component> listFrames;
     private int delayBetweenFrame;
     public void setListFrames(List<?> listFrames){
         List<Component> outList = new ArrayList<>();
