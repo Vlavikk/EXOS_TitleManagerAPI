@@ -1,12 +1,18 @@
-package vlavik.exos_titlemanagerapi.api.TitleManager;
+package vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils.Actions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TitleUtils {
-    public static List<CharOffset> convertToCharOffsets(String input){
+public class CharOffsetShaderSession {
+    private final String input;
+
+    public CharOffsetShaderSession(String input) {
+        this.input = input;
+    }
+
+    public List<CharOffset> convertToCharOffsets(){
         List<CharOffset> out = new ArrayList<>();
         int colorIndex = 0;
         for (int j = 0; j < input.length(); j++) {

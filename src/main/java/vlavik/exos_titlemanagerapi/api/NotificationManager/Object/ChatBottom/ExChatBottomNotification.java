@@ -56,9 +56,13 @@ public class ExChatBottomNotification extends ExActionBar {
         Optional<String> out = Optional.empty();
         if (text instanceof String){
             out = Optional.of((String) text);
-        }else if (text instanceof Component){
-            TextComponent textComponent = (TextComponent) text;
-            out = Optional.of( textComponent.content());
+        }else if (text instanceof Component component){
+            StringBuilder builder = new StringBuilder();
+            builder.append(((TextComponent) component).content());
+            for (Component comp : component.children()){
+                builder.append(((TextComponent) comp).content());
+            }
+            out = Optional.of(builder.toString());
         }
         out.ifPresent(value ->{
             this.overrideText = value;
@@ -70,12 +74,12 @@ public class ExChatBottomNotification extends ExActionBar {
         public Formatter(String input){
             this.result = formatter(input);
         }
-        private static HashMap<Integer,String> ones = new HashMap<>(Map.of(
+        private static final HashMap<Integer,String> ones = new HashMap<>(Map.of(
                 -1,"ющъы",
                 1,")(-><=_f{}",
                 2,"*[]t",
                 3,"l",
-                4,"!;:i.,'"
+                4,"!;:i.,'|"
         ));
         private Component formatter(String input){
             String[] lines = input.split("\n", 2);
