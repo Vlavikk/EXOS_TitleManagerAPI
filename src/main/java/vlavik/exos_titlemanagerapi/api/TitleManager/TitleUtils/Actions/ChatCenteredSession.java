@@ -32,7 +32,7 @@ public class ChatCenteredSession {
         StringBuilder padding = new StringBuilder();
         padding.append(" ".repeat(leftSpaces));
 
-        return new ChatCenterResult(padding + input + padding,leftSpaces);
+        return new ChatCenterResult(padding + input,leftSpaces);
     }
     public record ChatCenterResult(String getResultText,int getOffsetSpace){}
     private static int getCharWidth(char c) {

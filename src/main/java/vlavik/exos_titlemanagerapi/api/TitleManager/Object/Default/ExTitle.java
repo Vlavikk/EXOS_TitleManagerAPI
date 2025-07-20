@@ -51,7 +51,7 @@ public class ExTitle extends AbstractDefaultTitle {
     @Override
     public void sendLogic(TitlePlayer titlePlayer) {
         Player player = titlePlayer.getPlayer();
-        int period = isInfinity() ? 140 : getTime() + timeFadeIn + timeFadeOut;
+        int period = isInfinity() ? 1000 : getTime() + timeFadeIn + timeFadeOut;
         BukkitTask task = new BukkitRunnable() {
             private boolean skip = false;
             @Override

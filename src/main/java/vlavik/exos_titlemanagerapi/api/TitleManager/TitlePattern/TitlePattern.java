@@ -1,6 +1,7 @@
 package vlavik.exos_titlemanagerapi.api.TitleManager.TitlePattern;
 
 
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.IgnoredType;
@@ -15,7 +16,9 @@ public class TitlePattern {
         this.titlePlayer = titlePlayer;
     }
 
-    private final Component text =Component.text("\u1900").color(TextColor.color(78,92,40));
+    private final Component text = Component.text("\uE000")
+            .color(TextColor.color(78,92,40))
+            .font(Key.key("minecraft","utils"));
     public ExBossBar sendDarkInBossBar(int time, boolean force, IgnoredType... ignoredType){
         ExBossBar exBossBar = new ExBossBar(text,time,force,ignoredType);
         titlePlayer.send(exBossBar);

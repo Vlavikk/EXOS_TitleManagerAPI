@@ -11,8 +11,6 @@ import vlavik.exos_titlemanagerapi.api.TitleManager.Object.AbstractClass.Abstrac
 import vlavik.exos_titlemanagerapi.api.TitleManager.Packets.SendPacket;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
-import java.util.Optional;
-
 public class ExActionBar extends AbstractDefaultTitle {
     {
         setType(TitleType.ACTIONBAR);

@@ -1,5 +1,6 @@
 package vlavik.exos_titlemanagerapi.api.NotificationManager.Object.ChatBottom;
 
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
@@ -9,7 +10,9 @@ import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Default.ExActionBar;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.GameTime.GameTimes;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 
 public class ExChatBottomNotification extends ExActionBar {
@@ -39,16 +42,15 @@ public class ExChatBottomNotification extends ExActionBar {
         if (type == NotificationType.ERROR) gameTime = animation;
         else gameTime = GameTimes.ChatBottomNotification.FADE_IN;
         setGameTime(gameTime.getStartTime(), gameTime.getActiveTime());
-
         syncNotifications.put(titlePlayer,this);
-        super.sendLogic(titlePlayer);
 
-        sound.ifPresent(s -> setSound(
+        sound.ifPresent(s -> super.setSound(
                 animation == GameTimes.ChatBottomNotification.FADE_IN
                         ? s.fadeSound()
                         : s.shakeSound(),
                 false
         ));
+        super.sendLogic(titlePlayer);
     }
 
     @Override
@@ -89,9 +91,9 @@ public class ExChatBottomNotification extends ExActionBar {
                 LineColors colors = calculateColors(lines.length, i);
                 TextComponent.Builder lineComponent = Component.text();
 
-                String prefix = i == 0 ? "\u1901" : "\u1902";
+                Component prefix = Component.text(i == 0 ? "\uE001" : "\uE002").font(Key.key("minecraft","utils"));
 
-                lineComponent.append(Component.text(prefix).color(TextColor.color(78, 92, 9)));
+                lineComponent.append(prefix.color(TextColor.color(78, 92, 9)));
                 TextColor currentOverrideColor = null;
                 TextColor currentOverrideSpecColor = null;
                 int colorIndex = 0;
