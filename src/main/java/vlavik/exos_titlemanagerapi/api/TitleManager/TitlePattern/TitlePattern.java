@@ -18,7 +18,7 @@ public class TitlePattern {
 
     private final Component text = Component.text("\uE000")
             .color(TextColor.color(78,92,40))
-            .font(Key.key("minecraft","utils"));
+            .font(Key.key("minecraft","utils/dark"));
     public ExBossBar sendDarkInBossBar(int time, boolean force, IgnoredType... ignoredType){
         ExBossBar exBossBar = new ExBossBar(text,time,force,ignoredType);
         titlePlayer.send(exBossBar);
