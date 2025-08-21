@@ -58,6 +58,7 @@ public interface TitleEditable {
 
     <T> void sendActionBar(T text,int time,IgnoredType... ignoredOtherType);
     <T> void sendBossBar(T text,int time,IgnoredType... ignoredOtherType);
+    <T> void addBossBar(T text,int time,IgnoredType... ignoredOtherType);
     <T> void sendTitle(T text,int time,IgnoredType... ignoredOtherType);
     <T> void sendTitle(T text,int timeFadeIn,int time,int timeFadeOut,IgnoredType... ignoredOtherType);
 

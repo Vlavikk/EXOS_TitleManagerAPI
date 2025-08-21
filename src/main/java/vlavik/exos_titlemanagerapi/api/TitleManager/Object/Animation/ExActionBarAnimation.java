@@ -45,7 +45,7 @@ public class ExActionBarAnimation extends AbstractAnimationTitle {
                 SendPacket.sendActionBar(player,getListFrames().get(frame));
                 playSound(player);
                 if (time >= getTime() && !isInfinity()){
-                    titlePlayer.next(getType());
+                    cancelTitle(titlePlayer);
                     return;
                 }
                 time = time+getDelayBetweenFrame();

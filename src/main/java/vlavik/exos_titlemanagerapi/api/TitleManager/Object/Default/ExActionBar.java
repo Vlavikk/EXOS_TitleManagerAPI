@@ -55,11 +55,9 @@ public class ExActionBar extends AbstractDefaultTitle {
                             new BukkitRunnable() {
                                 @Override
                                 public void run() {
-//                                    if (isSending()) titlePlayer.next(getType());
-                                    cancel();
+                                    cancelTitle(titlePlayer);
                                 }
                             }.runTaskLater(EXOS_TitleManagerAPI.getInstance(), DEFAULT_DELAY_FADE_OUT - updateTime);
-                            canselTask();
                         }else titlePlayer.next(getType());
                     }
                     else if ((cycle * period) % updateTime == 0){

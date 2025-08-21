@@ -10,9 +10,13 @@ import vlavik.exos_titlemanagerapi.api.TitleManager.Object.AbstractClass.Abstrac
 import vlavik.exos_titlemanagerapi.api.TitleManager.Packets.SendPacket;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
+import java.util.UUID;
+
 public class ExBossBar extends AbstractDefaultTitle {
+    protected UUID uuid;
     {
         setType(TitleType.BOSS_BAR);
+        uuid = UUID.randomUUID();
     }
     public <T> ExBossBar(T text, int time, IgnoredType... ignoredType){
         setText(text);
@@ -29,18 +33,24 @@ public class ExBossBar extends AbstractDefaultTitle {
     @Override
     public void sendLogic(TitlePlayer titlePlayer) {
         Player player = titlePlayer.getPlayer();
-        if (isInfinity()) SendPacket.sendBossBar(player,getText());
+        if (isInfinity()) SendPacket.sendBossBar(player,getText(),uuid);
         else {
-            SendPacket.sendBossBar(player,getText());
+            SendPacket.sendBossBar(player,getText(),uuid);
             BukkitTask task = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    SendPacket.removeBossBar(player);
-                    titlePlayer.next(getType());
+                    cancelTitle(titlePlayer);
                 }
             }.runTaskTimer(EXOS_TitleManagerAPI.getInstance(),getTime(),2);
             playSound(player);
             setTask(task);
         }
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 }

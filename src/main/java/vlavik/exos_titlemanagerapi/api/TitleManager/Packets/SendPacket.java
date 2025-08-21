@@ -6,8 +6,11 @@ import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.EnumSet;
 import java.util.Optional;
+import java.util.UUID;
 
 public class SendPacket {
     public static void sendActionBar(Player player, Component text){
@@ -37,9 +40,9 @@ public class SendPacket {
         );
         PacketEvents.getAPI().getPlayerManager().sendPacket(player,title);
     }
-    public static void sendBossBar(Player player,Component text){
+    public static void sendBossBar(Player player,Component text,UUID uuid){
         WrapperPlayServerBossBar bossBar = new WrapperPlayServerBossBar(
-                player.getUniqueId(),
+                uuid,
                 WrapperPlayServerBossBar.Action.ADD
         );
         bossBar.setColor(BossBar.Color.YELLOW);
@@ -49,16 +52,16 @@ public class SendPacket {
         bossBar.setFlags(EnumSet.noneOf(BossBar.Flag.class));
         PacketEvents.getAPI().getPlayerManager().sendPacket(player,bossBar);
     }
-    public static void removeBossBar(Player player){
+    public static void removeBossBar(Player player,UUID uuid){
         WrapperPlayServerBossBar bossBar = new WrapperPlayServerBossBar(
-                player.getUniqueId(),
+                uuid,
                 WrapperPlayServerBossBar.Action.REMOVE
         );
         PacketEvents.getAPI().getPlayerManager().sendPacket(player,bossBar);
     }
-    public static void updateNameBossBar(Player player,Component newTitle){
-        removeBossBar(player);
-        sendBossBar(player,newTitle);
+    public static void updateNameBossBar(Player player,Component newTitle,UUID uuid){
+        removeBossBar(player,uuid);
+        sendBossBar(player,newTitle,uuid);
 //        WrapperPlayServerBossBar bossBar = new WrapperPlayServerBossBar(
 //                player.getUniqueId(),
 //                WrapperPlayServerBossBar.Action.ADD

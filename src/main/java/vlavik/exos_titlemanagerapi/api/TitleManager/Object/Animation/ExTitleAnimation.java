@@ -49,7 +49,7 @@ public class ExTitleAnimation extends AbstractAnimationTitle {
                 SendPacket.sendTitle(player,getListFrames().get(frame),timeFadeIn,getDelayBetweenFrame()+2,timeFadeOut,subTitle);
                 playSound(player);
                 if (time >= getTime() && !isInfinity()){
-                    titlePlayer.next(getType());
+                    cancelTitle(titlePlayer);
                     return;
                 }
                 time = time+getDelayBetweenFrame();

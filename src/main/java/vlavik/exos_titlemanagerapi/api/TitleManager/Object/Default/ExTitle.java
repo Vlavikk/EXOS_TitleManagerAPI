@@ -61,7 +61,7 @@ public class ExTitle extends AbstractDefaultTitle {
                     if (!skip){
                         SendPacket.sendTitle(player,getText(),timeFadeIn,getTime()+4,timeFadeOut,subTitle);
                         skip = true;
-                    }else titlePlayer.next(getType());
+                    }else cancelTitle(titlePlayer);
                 }
             }
         }.runTaskTimer(EXOS_TitleManagerAPI.getInstance(),0,period);

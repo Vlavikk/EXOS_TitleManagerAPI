@@ -28,6 +28,7 @@ public class FormatTextSession {
         colors.put("f",NamedTextColor.WHITE);
         colors.put("7",NamedTextColor.GRAY);
         colors.put("8",NamedTextColor.DARK_GRAY);
+        colors.put("0",NamedTextColor.BLACK);
     }
     private static final HashMap<Integer,String> ones = new HashMap<>(Map.of(
             8,"Щ",

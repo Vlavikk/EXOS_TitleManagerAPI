@@ -23,10 +23,11 @@ public class TitlePlayer implements TitleEditable {
     private final Player player;
     private final TitlePattern patterns = new TitlePattern(this);
     private final List<AbstractTitle> actionBarList = new ArrayList<>();;
-    private final List<AbstractTitle> bossBarList = new ArrayList<>();;
     private final List<AbstractTitle> titleList = new ArrayList<>();
+    private final PlayerBossBarManager bossBarManager;
     public TitlePlayer(Player player){
         this.player = player;
+        bossBarManager = new PlayerBossBarManager(this);
         titlePlayers.put(player.getName(),this);
     }
 
@@ -36,7 +37,10 @@ public class TitlePlayer implements TitleEditable {
         for (AbstractTitle title : titles){
             TitleType type = title.getType();
             List<AbstractTitle> list = getList(type);
-            if (list.isEmpty()){
+            if(title.getType() == TitleType.BOSS_BAR){
+                bossBarManager.addBossBar(title);
+            }
+            else if (list.isEmpty()){
                 list.addFirst(title);
                 sendInPlayerScreen(title);
             }
@@ -55,6 +59,7 @@ public class TitlePlayer implements TitleEditable {
     }
 
     @Override
+    @Deprecated
     public void send(AbstractNotification... notifications) {
         Arrays.stream(notifications).forEach(
                 notification -> notification.send(this));
@@ -109,6 +114,11 @@ public class TitlePlayer implements TitleEditable {
     public <T> void sendBossBar(T text, int time, boolean forced, IgnoredType... ignoredOtherType) {
         AbstractTitle title = createTitle(TitleType.BOSS_BAR,text,time,forced,ignoredOtherType);
         if (title != null) send(title);
+    }
+
+    @Override
+    public <T> void addBossBar(T text, int time, IgnoredType... ignoredOtherType) {
+
     }
 
     @Override
@@ -237,7 +247,7 @@ public class TitlePlayer implements TitleEditable {
     public List<AbstractTitle> getList(TitleType type){
         return switch (type) {
             case TITLE -> titleList;
-            case BOSS_BAR -> bossBarList;
+            case BOSS_BAR -> bossBarManager.getAllBossBars();
             case ACTIONBAR -> actionBarList;
         };
     }
@@ -251,5 +261,9 @@ public class TitlePlayer implements TitleEditable {
     }
     public Player getPlayer() {
         return player;
+    }
+
+    public PlayerBossBarManager getBossBarManager() {
+        return bossBarManager;
     }
 }

@@ -9,7 +9,7 @@ import vlavik.exos_titlemanagerapi.api.Events.ExTitleEndEvent;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.ForceType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.IgnoredType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.TitleType;
-import vlavik.exos_titlemanagerapi.api.TitleManager.Object.GameTime.GameTimeManager;
+import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Default.ExBossBar;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Task.AbstractTask;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Packets.SendPacket;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
@@ -25,14 +25,10 @@ public abstract class AbstractTitle extends AbstractTask {
     private ForceType forceType = ForceType.SAVE;
     private boolean isAnimation = false;
     private Optional<SoundSettings> sound = Optional.empty();
-    private Optional<GameTime> gameTime = Optional.empty();
     public abstract void sendLogic(TitlePlayer player);
     public void send(TitlePlayer titlePlayer){
-            if (time == 0) titlePlayer.next(type);
-            else{
-                sendLogic(titlePlayer);
-                gameTime.ifPresent(g -> GameTimeManager.sendTime(titlePlayer.getPlayer(),g.getStartTime(),g.getActiveTime()));
-            }
+        if (time == 0) titlePlayer.next(type);
+        else sendLogic(titlePlayer);
     }
     public void pause(TitlePlayer titlePlayer,IgnoredType action){
         canselTask();
@@ -42,7 +38,7 @@ public abstract class AbstractTitle extends AbstractTask {
         int deleteTime = time;
         switch (action){
             case DELETE -> deleteTime ++;// больше не проиграется и удалиться из списка PS: time + 1 никогда не может быть такого
-            case SAVE -> deleteTime = 20;} //если остаточное время больше 20, то сохраниться : нет
+            case SAVE -> deleteTime = 20;} //если остаточное время больше 20, то сохранится : нет
         time = time - getTimerTime() > deleteTime ? time - getTimerTime() : 0;
         Bukkit.getScheduler().runTask(EXOS_TitleManagerAPI.getInstance(),()->{
             Bukkit.getPluginManager().callEvent(new ExTitleEndEvent(titlePlayer,this));
@@ -57,12 +53,24 @@ public abstract class AbstractTitle extends AbstractTask {
             Bukkit.getPluginManager().callEvent(new ExTitleEndEvent(titlePlayer,this));
         });
     }
+
     public void sendVoidMassage(TitlePlayer titlePlayer){
         Player player = titlePlayer.getPlayer();
         switch (type){
             case TITLE: SendPacket.sendTitle(player,Component.text(""),0,1,0, Optional.empty()); break;
-            case BOSS_BAR: SendPacket.removeBossBar(player); break;
+            case BOSS_BAR: break; //SendPacket.removeBossBar(player);
             case ACTIONBAR: SendPacket.sendActionBar(player,Component.text(" "));break;
+        }
+    }
+    public void cancelTitle(TitlePlayer titlePlayer){
+        if (this instanceof ExBossBar bossBar){
+            titlePlayer.getBossBarManager().removeBossBar(bossBar);
+            SendPacket.removeBossBar(titlePlayer.getPlayer(),bossBar.getUuid());
+        }else {
+            Optional<AbstractTitle> abstractTitle = titlePlayer.getCurrentTitle(type);
+            if(abstractTitle.isPresent() && abstractTitle.get().equals(this)){
+                titlePlayer.next(type);
+            }else titlePlayer.getList(type).remove(this);
         }
     }
     private boolean soundAlreadyPlay = false;
@@ -75,13 +83,6 @@ public abstract class AbstractTitle extends AbstractTask {
         }
     }
     public record SoundSettings(Sound sound,boolean playedOnce){}
-    public record GameTime(int getStartTime,int getActiveTime){}
-    public void setGameTime(int gameTime,int activeTime) {
-        this.gameTime = Optional.of(new GameTime(gameTime,activeTime));
-    }
-    public Optional<GameTime> getGameTime() {
-        return gameTime;
-    }
     public boolean isInfinity(){
         return time == -1;
     }
@@ -123,9 +124,6 @@ public abstract class AbstractTitle extends AbstractTask {
     public void setType(TitleType type) {
         this.type = type;
     }
-//    public boolean isSending() {
-//        return isSending;
-//    }
     public void setSound(Sound sound,boolean playedOnes) {
         this.sound = Optional.of(new SoundSettings(sound,playedOnes));
     }
