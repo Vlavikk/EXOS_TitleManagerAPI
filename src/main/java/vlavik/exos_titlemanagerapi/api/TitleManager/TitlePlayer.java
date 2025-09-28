@@ -202,6 +202,7 @@ public class TitlePlayer implements TitleEditable {
                 ));
             }
             if (!list.isEmpty()) sendInPlayerScreen(list.getFirst());
+            else title.sendVoidMassage(this);
         });
     }
 

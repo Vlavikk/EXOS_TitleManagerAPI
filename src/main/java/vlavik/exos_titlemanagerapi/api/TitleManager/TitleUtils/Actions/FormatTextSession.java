@@ -34,8 +34,8 @@ public class FormatTextSession {
             8,"Щ",
             7,"ЖЫЮФШю",
             6,"@ЪЦДЪдщъы",
-            4,")(><=_fkк{}г",
-            3,"*[]tI ",
+            4,"><=_fkк{}г",
+            3,")(*[]tI ",
             2,"l",
             1,"!;:i.,'|."
     ));
@@ -68,7 +68,8 @@ public class FormatTextSession {
 
                 if ("§&".contains(String.valueOf(c)) && j + 1 < s.length()){
                     String code = String.valueOf(s.charAt(++j));
-                    font = Key.key("minecraft","utils/colors/utiltext_"+colors.get(code).toString());
+                    String finalCode = colors.containsKey(code) ? code : "f"; // просто белый если символ не найден
+                    font = Key.key("minecraft","utils/colors/utiltext_"+colors.get(finalCode).toString());
                     continue;
                 }
                 builder.append(Component.text(String.valueOf(c))

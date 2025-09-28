@@ -56,8 +56,13 @@ public class ExTitle extends AbstractDefaultTitle {
             private boolean skip = false;
             @Override
             public void run() {
-                if (isInfinity()) SendPacket.sendTitle(player,getText(),timeFadeIn,period+4,timeFadeOut,subTitle);
-                else {
+                if (isInfinity()){
+                    if(!skip){
+                        SendPacket.sendTitle(player,getText(),timeFadeIn,period+4,timeFadeOut,subTitle);
+                        skip = true;
+                    }
+                    else SendPacket.sendTitle(player,getText(),0,period+4,0,subTitle);
+                } else {
                     if (!skip){
                         SendPacket.sendTitle(player,getText(),timeFadeIn,getTime()+4,timeFadeOut,subTitle);
                         skip = true;
