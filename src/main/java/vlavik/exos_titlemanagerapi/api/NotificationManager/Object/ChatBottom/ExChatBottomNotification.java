@@ -39,6 +39,7 @@ public class ExChatBottomNotification extends ExActionBar {
 
         syncNotifications.put(titlePlayer,this);
         super.text = formatter(overrideText,titlePlayer.getPlayer());
+        setDefaultTimeFadeOut(true);
 
         sound.ifPresent(s -> super.setSound(
                 typeFade == TypeFade.FADE_IN
