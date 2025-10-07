@@ -3,8 +3,11 @@ package vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils.Actions;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
+import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -41,10 +44,10 @@ public class FormatTextSession {
     ));
     private Component result;
 
-    public FormatTextSession(String input, long gameTime,int ping, int maxLine,int startIndex) {
-        logic(input,maxLine,ping,gameTime,startIndex);
+    public FormatTextSession(String input, long gameTime,int ping, int maxLine,int startIndex,boolean shadow) {
+        logic(input,maxLine,ping,gameTime,startIndex,shadow);
     }
-    private void logic(String input,int maxLine,int ping,long gameTime,int startIndex){
+    private void logic(String input,int maxLine,int ping,long gameTime,int startIndex,boolean shadow){
         ComponentBuilder builder = Component.text();
 
         String[] messages = input.split("\n",maxLine);
@@ -56,27 +59,42 @@ public class FormatTextSession {
 
         int thisOffset = 0;
         int line = 0;
-        Key font = Key.key("minecraft","utils/colors/utiltext_white");
+        @NotNull Key fontMain = Key.key("minecraft","utils/colors/utiltext_white");
+        @Nullable Key fontShadow = Key.key("minecraft","utils/shadows/utiltext_white");
         long time = gameTime % 24000 + ((long) Math.floor((double) ping / 50));
         builder.append(Component.text("\u1A31".repeat(allOffset)));
-        builder.font(font);
+        builder.font(fontMain);
         for (String s : messages){
-            TextColor color = TextColor.color((int) time % 255,((int) Math.floor((double) time /255)) + 100,startIndex+ line);
+            TextColor colorMain = TextColor.color((int) time % 255,((int) Math.floor((double) time /255)) + 100,startIndex+ line);
             builder.append(Component.text("\u1A32".repeat(thisOffset)));
+            @NotNull ComponentBuilder lineComponent = Component.text();
+            @Nullable ComponentBuilder lineShadowComponent = Component.text();
             for (int j = 0; j < s.length(); j++){
                 char c = s.charAt(j);
 
                 if ("§&".contains(String.valueOf(c)) && j + 1 < s.length()){
                     String code = String.valueOf(s.charAt(++j));
                     String finalCode = colors.containsKey(code) ? code : "f"; // просто белый если символ не найден
-                    font = Key.key("minecraft","utils/colors/utiltext_"+colors.get(finalCode).toString());
+                    fontMain = Key.key("minecraft","utils/colors/utiltext_"+colors.get(finalCode).toString());
+                    if (shadow) fontShadow = Key.key("minecraft","utils/shadows/utiltext_"+colors.get(finalCode).toString());
                     continue;
                 }
-                builder.append(Component.text(String.valueOf(c))
-                        .font(font)
-                        .color(color));
+
+                lineComponent.append(Component.text(String.valueOf(c))
+                        .font(fontMain)
+                        .color(colorMain));
+                if (shadow){
+                    lineShadowComponent.append(Component.text(String.valueOf(c))
+                            .font(fontShadow)
+                            .color(colorMain));
+                }
             }
             thisOffset = getStringOffsets(getClearedString(s));
+            if (shadow){
+                builder.append(lineShadowComponent.build());
+                builder.append(Component.text("\u1A32".repeat(thisOffset)));
+            }
+            builder.append(lineComponent.build());
             line++;
         }
         result = builder.build();

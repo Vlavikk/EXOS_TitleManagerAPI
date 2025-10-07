@@ -18,10 +18,13 @@ public class TitleUtils {
         return new ChatCenteredSession(input,leftOffsetPixel).centerText();
     }
     public static Component formatText(String inputText, int maxLine,Player player,int startIndex){
-        return new FormatTextSession(inputText,player.getWorld().getGameTime(),player.getPing(),maxLine,startIndex).getResult();
+        return new FormatTextSession(inputText,player.getWorld().getGameTime(),player.getPing(),maxLine,startIndex,false).getResult();
+    }
+    public static Component formatText(String inputText, int maxLine,Player player,int startIndex,boolean shadow){
+        return new FormatTextSession(inputText,player.getWorld().getGameTime(),player.getPing(),maxLine,startIndex,shadow).getResult();
     }
     public static Component formatText(String inputText, int maxLine, long gameTime, int ping,int startIndex){
-        return new FormatTextSession(inputText,gameTime,ping,maxLine,startIndex).getResult();
+        return new FormatTextSession(inputText,gameTime,ping,maxLine,startIndex,false).getResult();
     }
 
     /**

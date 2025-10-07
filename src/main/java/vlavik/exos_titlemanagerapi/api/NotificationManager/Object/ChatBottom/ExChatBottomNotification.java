@@ -70,9 +70,9 @@ public class ExChatBottomNotification extends ExActionBar {
         Component backGround = TitleUtils.formatImage("\uE000",Key.key("minecraft","utils/custom_utils"),player,typeFade == TypeFade.FADE_IN ? 0 : 1);
         Component text;
         if (input.split("\n",2).length >= 2){
-            text = TitleUtils.formatText(input,2, player, typeFade == TypeFade.FADE_IN ? 2 : 4);
+            text = TitleUtils.formatText(input,2, player, typeFade == TypeFade.FADE_IN ? 2 : 4,true);
         }else {
-            text = TitleUtils.formatText(input,1, player, typeFade == TypeFade.FADE_IN ? 0 : 1);
+            text = TitleUtils.formatText(input,1, player, typeFade == TypeFade.FADE_IN ? 0 : 1,true);
         }
         return backGround.append(text);
     }
