@@ -1,5 +1,6 @@
 package vlavik.exos_titlemanagerapi.api;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -83,5 +84,12 @@ public class Utils {
     }
     public static void playSoundPlayer(Player player, Sound sound){
         player.playSound(player,sound,1,1);
+    }
+    public static int getRealPlayerPing(Player player){
+        try {
+            return Integer.parseInt(PlaceholderAPI.setPlaceholders(player,"%exos-utils_grim-PlayerPing%"));
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 }

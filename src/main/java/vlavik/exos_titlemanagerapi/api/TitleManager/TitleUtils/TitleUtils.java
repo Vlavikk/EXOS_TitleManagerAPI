@@ -7,6 +7,7 @@ import vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils.Actions.CharOffse
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils.Actions.ChatCenteredSession;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils.Actions.FormatImageSession;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils.Actions.FormatTextSession;
+import vlavik.exos_titlemanagerapi.api.Utils;
 
 import java.util.List;
 
@@ -18,10 +19,10 @@ public class TitleUtils {
         return new ChatCenteredSession(input,leftOffsetPixel).centerText();
     }
     public static Component formatText(String inputText, int maxLine,Player player,int startIndex){
-        return new FormatTextSession(inputText,player.getWorld().getGameTime(),player.getPing(),maxLine,startIndex,false).getResult();
+        return new FormatTextSession(inputText,player.getWorld().getGameTime(), Utils.getRealPlayerPing(player),maxLine,startIndex,false).getResult();
     }
     public static Component formatText(String inputText, int maxLine,Player player,int startIndex,boolean shadow){
-        return new FormatTextSession(inputText,player.getWorld().getGameTime(),player.getPing(),maxLine,startIndex,shadow).getResult();
+        return new FormatTextSession(inputText,player.getWorld().getGameTime(),Utils.getRealPlayerPing(player),maxLine,startIndex,shadow).getResult();
     }
     public static Component formatText(String inputText, int maxLine, long gameTime, int ping,int startIndex){
         return new FormatTextSession(inputText,gameTime,ping,maxLine,startIndex,false).getResult();
@@ -34,6 +35,6 @@ public class TitleUtils {
         return new FormatImageSession(inputText,font,gameTime,ping,startIndex).getResult();
     }
     public static Component formatImage(String inputText, Key font,Player player, int startIndex){
-        return new FormatImageSession(inputText,font,player.getWorld().getGameTime(),player.getPing(),startIndex).getResult();
+        return new FormatImageSession(inputText,font,player.getWorld().getGameTime(),Utils.getRealPlayerPing(player),startIndex).getResult();
     }
 }

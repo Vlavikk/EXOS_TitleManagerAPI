@@ -65,7 +65,7 @@ public class FormatTextSession {
         builder.append(Component.text("\u1A31".repeat(allOffset)));
         builder.font(fontMain);
         for (String s : messages){
-            TextColor colorMain = TextColor.color((int) time % 255,((int) Math.floor((double) time /255)) + 100,startIndex+ line);
+            TextColor color = TextColor.color((int) time % 255,((int) Math.floor((double) time /255)) + 100,startIndex+ line);
             builder.append(Component.text("\u1A32".repeat(thisOffset)));
             @NotNull ComponentBuilder lineComponent = Component.text();
             @Nullable ComponentBuilder lineShadowComponent = Component.text();
@@ -82,11 +82,11 @@ public class FormatTextSession {
 
                 lineComponent.append(Component.text(String.valueOf(c))
                         .font(fontMain)
-                        .color(colorMain));
+                        .color(color));
                 if (shadow){
                     lineShadowComponent.append(Component.text(String.valueOf(c))
                             .font(fontShadow)
-                            .color(colorMain));
+                            .color(color));
                 }
             }
             thisOffset = getStringOffsets(getClearedString(s));
