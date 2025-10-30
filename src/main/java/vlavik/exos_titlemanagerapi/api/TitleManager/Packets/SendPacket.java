@@ -6,8 +6,6 @@ import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.util.EnumSet;
 import java.util.Optional;
 import java.util.UUID;

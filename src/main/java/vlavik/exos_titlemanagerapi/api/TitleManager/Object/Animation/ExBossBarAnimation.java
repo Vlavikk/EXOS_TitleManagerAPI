@@ -7,7 +7,6 @@ import org.bukkit.scheduler.BukkitTask;
 import vlavik.exos_titlemanagerapi.EXOS_TitleManagerAPI;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.IgnoredType;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Enums.TitleType;
-import vlavik.exos_titlemanagerapi.api.TitleManager.Object.AbstractClass.AbstractAnimationTitle;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Object.Default.ExBossBar;
 import vlavik.exos_titlemanagerapi.api.TitleManager.Packets.SendPacket;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
