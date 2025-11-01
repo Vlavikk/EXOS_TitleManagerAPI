@@ -65,6 +65,7 @@ public abstract class AbstractTitle extends AbstractTask {
     public void cancelTitle(TitlePlayer titlePlayer){
         if (this instanceof ExBossBar bossBar){
             titlePlayer.getBossBarManager().removeBossBar(bossBar);
+            canselTask();
             SendPacket.removeBossBar(titlePlayer.getPlayer(),bossBar.getUuid());
         }else {
             Optional<AbstractTitle> abstractTitle = titlePlayer.getCurrentTitle(type);

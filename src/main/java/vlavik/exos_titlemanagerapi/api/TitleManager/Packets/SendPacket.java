@@ -60,11 +60,11 @@ public class SendPacket {
     public static void updateNameBossBar(Player player,Component newTitle,UUID uuid){
         removeBossBar(player,uuid);
         sendBossBar(player,newTitle,uuid);
-//        WrapperPlayServerBossBar bossBar = new WrapperPlayServerBossBar(
-//                player.getUniqueId(),
-//                WrapperPlayServerBossBar.Action.ADD
-//        );
-//        bossBar.setTitle(newTitle);
-//        PacketEvents.getAPI().getPlayerManager().sendPacket(player,bossBar);
+        WrapperPlayServerBossBar bossBar = new WrapperPlayServerBossBar(
+                player.getUniqueId(),
+                WrapperPlayServerBossBar.Action.ADD
+        );
+        bossBar.setTitle(newTitle);
+        PacketEvents.getAPI().getPlayerManager().sendPacket(player,bossBar);
     }
 }
