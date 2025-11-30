@@ -48,7 +48,8 @@ public class ExBossBarAnimation extends ExBossBar {
             @Override
             public void run() {
                 if (frame >= getListFrames().size()) frame = 0;
-                SendPacket.updateNameBossBar(player,getListFrames().get(frame),uuid);
+                if (time == 0) SendPacket.sendBossBar(player,getListFrames().get(frame),uuid);
+                else SendPacket.updateNameBossBar(player,getListFrames().get(frame),uuid);
                 playSound(player);
                 if (time >= getTime() && !isInfinity()){
                     cancelTitle(titlePlayer);

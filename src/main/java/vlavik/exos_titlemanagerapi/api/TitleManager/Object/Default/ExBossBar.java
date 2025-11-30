@@ -46,6 +46,10 @@ public class ExBossBar extends AbstractDefaultTitle {
             setTask(task);
         }
     }
+    public <T> void updateName(TitlePlayer titlePlayer,T newName){
+        setText(newName);
+        SendPacket.updateNameBossBar(titlePlayer.getPlayer(),getText(),uuid);
+    }
 
     public UUID getUuid() {
         return uuid;
