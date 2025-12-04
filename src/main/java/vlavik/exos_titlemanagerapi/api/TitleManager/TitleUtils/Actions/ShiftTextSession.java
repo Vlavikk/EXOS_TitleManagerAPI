@@ -62,7 +62,7 @@ public class ShiftTextSession {
 
     private int calculateLength(String text, ShiftTextType type) {
         if (type == ShiftTextType.PIXELS) {
-            return text.chars().map(c -> TitleUtils.getCharLength((char) c)).sum();
+            return text.chars().map(c -> TitleUtils.getCharLength((char) c)+1).sum();
         }
         return text.length();
     }
