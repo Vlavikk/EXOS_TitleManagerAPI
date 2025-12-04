@@ -7,6 +7,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils.TitleUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,15 +33,6 @@ public class FormatTextSession {
         colors.put("8",NamedTextColor.DARK_GRAY);
         colors.put("0",NamedTextColor.BLACK);
     }
-    private static final HashMap<Integer,String> ones = new HashMap<>(Map.of(
-            8,"Щ",
-            7,"ЖЫЮФШю",
-            6,"@ЪЦДЪдщъы",
-            4,"><=_fkк{}г",
-            3,")(*[]tI ",
-            2,"l",
-            1,"!;:i.,'|."
-    ));
     private Component result;
 
     public FormatTextSession(String input, long gameTime,int ping, int maxLine,int startIndex,boolean shadow) {
@@ -101,15 +93,16 @@ public class FormatTextSession {
     private int getStringOffsets(String input){
         int i = 0;
         for (char c : input.toCharArray()){
-            boolean isConf = false;
-            for (Map.Entry<Integer, String> entry : ones.entrySet()){
-                if (entry.getValue().contains(String.valueOf(c))){
-                    i = i+entry.getKey();
-                    isConf = true;
-                    break;
-                }
-            }
-            if (!isConf) i = i+5;
+            i = i + TitleUtils.getCharLength(c);
+//            boolean isConf = false;
+//            for (Map.Entry<Integer, String> entry : TitleUtils.charsMap.entrySet()){
+//                if (entry.getValue().contains(String.valueOf(c))){
+//                    i = i+entry.getKey();
+//                    isConf = true;
+//                    break;
+//                }
+//            }
+//            if (!isConf) i = i+5;
         }
         return i+input.length();
     }

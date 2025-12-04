@@ -3,13 +3,12 @@ package vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
-import vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils.Actions.CharOffsetShaderSession;
-import vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils.Actions.ChatCenteredSession;
-import vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils.Actions.FormatImageSession;
-import vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils.Actions.FormatTextSession;
+import vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils.Actions.*;
 import vlavik.exos_titlemanagerapi.api.Utils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TitleUtils {
     public static List<CharOffsetShaderSession.CharOffset> getCharOffsetsForShader(String input){
@@ -36,5 +35,27 @@ public class TitleUtils {
     }
     public static Component formatImage(String inputText, Key font,Player player, int startIndex){
         return new FormatImageSession(inputText,font,player.getWorld().getGameTime(),Utils.getRealPlayerPing(player),startIndex).getResult();
+    }
+    public static ShiftTextSession.ShiftTextSessionResult shiftText(ShiftTextSession.ShiftTextType type, String input, int lineShift, boolean middleShift){
+        return new ShiftTextSession(type,input,lineShift,middleShift).getResult();
+    }
+    private static final HashMap<Integer,String> charsMap = new HashMap<>(Map.of(
+            8,"Щ",
+            7,"ЖЫЮФШю",
+            6,"@ЪЦДЪдщъы",
+            4,"><=_fkк{}г",
+            3,")(*[]tI ",
+            2,"l",
+            1,"!;:i.,'|."
+    ));
+    public static int getCharLength(char c){
+        int i = -1;
+        for (Map.Entry<Integer, String> entry : charsMap.entrySet()){
+            if (entry.getValue().contains(String.valueOf(c))){
+                i = entry.getKey();
+                break;
+            }
+        }
+        return i == -1 ? 5 : i;
     }
 }
