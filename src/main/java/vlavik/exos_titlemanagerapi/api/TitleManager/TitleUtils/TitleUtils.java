@@ -7,6 +7,7 @@ import vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils.Actions.*;
 import vlavik.exos_titlemanagerapi.api.Utils;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,9 @@ public class TitleUtils {
     }
     public static Component formatText(String inputText, int maxLine,Player player,int startIndex,boolean shadow){
         return new FormatTextSession(inputText,player.getWorld().getGameTime(),Utils.getRealPlayerPing(player),maxLine,startIndex,shadow).getResult();
+    }
+    public static Component formatText(LinkedHashMap<String,Integer> inputText, Player player, int startIndex, boolean shadow){
+        return new FormatTextSession(inputText,player.getWorld().getGameTime(),Utils.getRealPlayerPing(player),startIndex,shadow).getResult();
     }
     public static Component formatText(String inputText, int maxLine, long gameTime, int ping,int startIndex){
         return new FormatTextSession(inputText,gameTime,ping,maxLine,startIndex,false).getResult();
