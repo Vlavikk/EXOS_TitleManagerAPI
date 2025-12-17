@@ -7,6 +7,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils.Actions.FormatText.FormatTextOverrideBuilder;
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils.TitleUtils;
 
 import java.util.*;
@@ -36,7 +37,7 @@ public class FormatTextSession {
     public FormatTextSession(String input, long gameTime,int ping, int maxLine,int startIndex,boolean shadow) {
         logic(input,maxLine,ping,gameTime,startIndex,shadow);
     }
-    public FormatTextSession(LinkedHashMap<String,Integer> input, long gameTime,int ping,int startIndex,boolean shadow) {
+    public FormatTextSession(LinkedHashMap<String, FormatTextOverrideBuilder> input, long gameTime, int ping, int startIndex, boolean shadow) {
         advancedLogic(input,ping,gameTime,startIndex,shadow);
     }
     private void logic(String input,int maxLine,int ping,long gameTime,int startIndex,boolean shadow){
@@ -91,8 +92,7 @@ public class FormatTextSession {
         }
         result = builder.build();
     }
-    //В input в Integer писать значение которое нужно приплюсовать к startIndex
-    private void advancedLogic(LinkedHashMap<String,Integer> input, int ping, long gameTime, int startIndex, boolean shadow){
+    private void advancedLogic(LinkedHashMap<String,FormatTextOverrideBuilder> input, int ping, long gameTime, int startIndex, boolean shadow){
         ComponentBuilder builder = Component.text();
 
         Set<String> messages = input.keySet();
@@ -106,12 +106,19 @@ public class FormatTextSession {
         int line = 0;
         @NotNull Key fontMain = Key.key("minecraft","utils/colors/utiltext_white");
         @Nullable Key fontShadow = Key.key("minecraft","utils/shadows/utiltext_white");
-        long time = gameTime % 24000 + ((long) Math.floor((double) ping / 50));
         builder.append(Component.text("\u1A31".repeat(allOffset)));
         builder.font(fontMain);
-        for (Map.Entry<String, Integer> entry : input.entrySet()){
+        for (Map.Entry<String, FormatTextOverrideBuilder> entry : input.entrySet()){
             String s = entry.getKey();
-            TextColor color = TextColor.color((int) time % 255,((int) Math.floor((double) time /255)) + 100,startIndex+ entry.getValue());
+            FormatTextOverrideBuilder overrideParams = entry.getValue();
+            int overridePing = overrideParams.getPing().orElse(ping);
+            long overrideGameTime = overrideParams.getGameTime().orElse(gameTime);
+            int overrideIndex = overrideParams.getIndex().orElse(line);
+            boolean overrideShadow = overrideParams.getShadow().orElse(shadow);
+
+            long time = overrideGameTime % 24000 + ((long) Math.floor((double) overridePing / 50));
+
+            TextColor color = TextColor.color((int) time % 255,((int) Math.floor((double) time /255)) + 100,startIndex + overrideIndex);
             builder.append(Component.text("\u1A32".repeat(thisOffset)));
             @NotNull ComponentBuilder lineComponent = Component.text();
             @Nullable ComponentBuilder lineShadowComponent = Component.text();
@@ -122,21 +129,21 @@ public class FormatTextSession {
                     String code = String.valueOf(s.charAt(++j));
                     String finalCode = colors.containsKey(code) ? code : "f"; // просто белый если символ не найден
                     fontMain = Key.key("minecraft","utils/colors/utiltext_"+colors.get(finalCode).toString());
-                    if (shadow) fontShadow = Key.key("minecraft","utils/shadows/utiltext_"+colors.get(finalCode).toString());
+                    if (overrideShadow) fontShadow = Key.key("minecraft","utils/shadows/utiltext_"+colors.get(finalCode).toString());
                     continue;
                 }
 
                 lineComponent.append(Component.text(String.valueOf(c))
                         .font(fontMain)
                         .color(color));
-                if (shadow){
+                if (overrideShadow){
                     lineShadowComponent.append(Component.text(String.valueOf(c))
                             .font(fontShadow)
                             .color(color));
                 }
             }
             thisOffset = getStringOffsets(getClearedString(s));
-            if (shadow){
+            if (overrideShadow){
                 builder.append(lineShadowComponent.build());
                 builder.append(Component.text("\u1A32".repeat(thisOffset)));
             }
