@@ -9,7 +9,7 @@ import vlavik.exos_titlemanagerapi.api.TitleManager.TitlePlayer;
 
 public class PlayerConnection implements Listener {
     @EventHandler
-    private void Quit(PlayerQuitEvent e){
+    public void Quit(PlayerQuitEvent e){
         Player player = e.getPlayer();
         if (TitlePlayer.titlePlayers.containsKey(player.getName())){
             TitlePlayer.getTitlePlayer(player).cancel(
