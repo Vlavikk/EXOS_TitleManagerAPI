@@ -32,6 +32,10 @@ public class TitleUtils {
     public static Component formatText(LinkedHashMap<String,FormatTextOverrideBuilder> inputText, long gameTime, int ping, int startIndex, boolean shadow){
         return new FormatTextSession(inputText,gameTime,ping,startIndex,shadow).getResult();
     }
+    public static Component formatText(LinkedList<InputTextParams> inputText, long gameTime, int ping, int startIndex, boolean shadow){
+        return new FormatTextSession(inputText,gameTime,ping,startIndex,shadow).getResult();
+    }
+    public record InputTextParams(String text, FormatTextOverrideBuilder builder){}
 
     /**
      * @param font шрифт должен содержать determinant_pixel

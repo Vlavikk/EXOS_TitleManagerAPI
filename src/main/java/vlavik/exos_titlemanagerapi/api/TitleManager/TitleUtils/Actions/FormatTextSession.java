@@ -11,6 +11,7 @@ import vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils.Actions.FormatTex
 import vlavik.exos_titlemanagerapi.api.TitleManager.TitleUtils.TitleUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class FormatTextSession {
     private static final HashMap<String,NamedTextColor> colors = new HashMap<>();
@@ -38,6 +39,11 @@ public class FormatTextSession {
         logic(input,maxLine,ping,gameTime,startIndex,shadow);
     }
     public FormatTextSession(LinkedHashMap<String, FormatTextOverrideBuilder> input, long gameTime, int ping, int startIndex, boolean shadow) {
+        LinkedList<TitleUtils.InputTextParams> linkedList = new LinkedList<>();
+        input.forEach((text, param) -> linkedList.add(new TitleUtils.InputTextParams(text, param)));
+        advancedLogic(linkedList,ping,gameTime,startIndex,shadow);
+    }
+    public FormatTextSession(LinkedList<TitleUtils.InputTextParams> input, long gameTime, int ping, int startIndex, boolean shadow) {
         advancedLogic(input,ping,gameTime,startIndex,shadow);
     }
     private void logic(String input,int maxLine,int ping,long gameTime,int startIndex,boolean shadow){
@@ -92,10 +98,10 @@ public class FormatTextSession {
         }
         result = builder.build();
     }
-    private void advancedLogic(LinkedHashMap<String,FormatTextOverrideBuilder> input, int ping, long gameTime, int startIndex, boolean shadow){
+    private void advancedLogic(LinkedList<TitleUtils.InputTextParams> input, int ping, long gameTime, int startIndex, boolean shadow){
         ComponentBuilder builder = Component.text();
 
-        Set<String> messages = input.keySet();
+        List<String> messages = input.stream().map(TitleUtils.InputTextParams::text).toList();
         int maxWight = messages.stream().mapToInt(s ->getStringOffsets(getClearedString(s))).max().orElse(0);
         int allOffset = messages.size() >= 2 ?
                 maxWight - (maxWight - getStringOffsets(getClearedString(messages.stream().toList().get(messages.size()-1))))
@@ -108,9 +114,9 @@ public class FormatTextSession {
         @Nullable Key fontShadow = Key.key("minecraft","utils/shadows/utiltext_white");
         builder.append(Component.text("\u1A31".repeat(allOffset)));
         builder.font(fontMain);
-        for (Map.Entry<String, FormatTextOverrideBuilder> entry : input.entrySet()){
-            String s = entry.getKey();
-            FormatTextOverrideBuilder overrideParams = entry.getValue();
+        for (TitleUtils.InputTextParams param : input){
+            String s = param.text();
+            FormatTextOverrideBuilder overrideParams = param.builder();
             int overridePing = overrideParams.getPing().orElse(ping);
             long overrideGameTime = overrideParams.getGameTime().orElse(gameTime);
             int overrideIndex = overrideParams.getIndex().orElse(line);
