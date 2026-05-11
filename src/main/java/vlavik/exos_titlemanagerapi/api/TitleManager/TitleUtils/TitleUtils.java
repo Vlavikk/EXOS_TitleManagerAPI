@@ -32,6 +32,9 @@ public class TitleUtils {
     public static Component formatText(LinkedHashMap<String,FormatTextOverrideBuilder> inputText, long gameTime, int ping, int startIndex, boolean shadow){
         return new FormatTextSession(inputText,gameTime,ping,startIndex,shadow).getResult();
     }
+    public static Component formatText(LinkedList<InputTextParams> inputText, Player player, int startIndex, boolean shadow){
+        return new FormatTextSession(inputText,player.getWorld().getGameTime(),Utils.getRealPlayerPing(player),startIndex,shadow).getResult();
+    }
     public static Component formatText(LinkedList<InputTextParams> inputText, long gameTime, int ping, int startIndex, boolean shadow){
         return new FormatTextSession(inputText,gameTime,ping,startIndex,shadow).getResult();
     }
